@@ -30,10 +30,11 @@
   "homepage": "https://github.com/prijindal/betro-js-client#readme",
   "dependencies": {
     "axios": "^0.21.1",
-    "betro-js-lib": "git+https://prijindal@github.com/betro-app/betro-js-lib.git#70aaf165daa0f8b21d8c73ec76f4e631ddf75475",
+    "betro-js-lib": "git+https://prijindal@github.com/betro-app/betro-js-lib.git#f25d2647b3d62e4ecc3136a9eb8c14c757deb733",
     "lodash": "^4.17.21"
   },
   "devDependencies": {
+    "@types/faker": "^5.5.5",
     "@types/jest": "^26.0.23",
     "@types/lodash": "^4.14.169",
     "@types/node": "^15.3.1",
@@ -41,6 +42,7 @@
     "@typescript-eslint/parser": "^4.24.0",
     "eslint": "^7.26.0",
     "eslint-config-prettier": "^8.3.0",
+    "faker": "^5.5.3",
     "husky": "^6.0.0",
     "jest": "^26.6.3",
     "nodemon": "^2.0.7",

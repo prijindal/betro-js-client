@@ -1,4 +1,4 @@
-const commonConfig = {
+module.exports = {
   globals: {
     "ts-jest": {
       tsconfig: "tsconfig.json",
@@ -9,16 +9,8 @@ const commonConfig = {
     "^.+\\.(ts|tsx)$": "ts-jest",
   },
   collectCoverageFrom: ["src/**/*.ts"],
+  coveragePathIgnorePatterns: ["/src/scripts/"],
   testMatch: ["**/test/**/*.test.(ts|js)", "**/src/**/*.test.(ts|js)"],
+  testEnvironment: "node",
   testTimeout: 5000,
-};
-
-module.exports = {
-  projects: [{
-    ...commonConfig,
-    testEnvironment: "jsdom",
-  }, {
-    ...commonConfig,
-    testEnvironment: "node",
-  }]
 };
