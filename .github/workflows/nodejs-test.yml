@@ -64,3 +64,6 @@ jobs:
           env_vars: NODE_VERSION
         env:
           NODE_VERSION: ${{ matrix.node-version }}
+      - uses: paambaati/codeclimate-action@v2.7.5
+        env:
+          CC_TEST_REPORTER_ID: ${{secrets.CC_TEST_REPORTER_ID}}
