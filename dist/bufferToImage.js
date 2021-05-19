@@ -7,10 +7,15 @@ exports.imageUrlToBuffer = exports.bufferToImageUrl = void 0;
 const axios_1 = __importDefault(require("axios"));
 const bufferToImageUrl = (buffer) => {
     const arrayBufferView = new Uint8Array(buffer);
-    const blob = new Blob([arrayBufferView], { type: "image/jpeg" });
-    const urlCreator = window.URL || window.webkitURL;
-    const imageUrl = urlCreator.createObjectURL(blob);
-    return imageUrl;
+    if (Blob != null) {
+        const blob = new Blob([arrayBufferView], { type: "image/jpeg" });
+        const urlCreator = window.URL || window.webkitURL;
+        if (urlCreator != null) {
+            const imageUrl = urlCreator.createObjectURL(blob);
+            return imageUrl;
+        }
+    }
+    return "";
 };
 exports.bufferToImageUrl = bufferToImageUrl;
 const imageUrlToBuffer = async (url) => {

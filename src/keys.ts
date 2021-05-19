@@ -110,7 +110,6 @@ class KeysController {
         };
       }
     }
-    console.dir(this.auth.ecdhKeys);
   };
 }
 

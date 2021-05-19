@@ -16,10 +16,11 @@ declare class AuthController {
     instance: AxiosInstance;
     constructor(host: string);
     isAuthenticated: () => boolean;
+    getToken: () => string;
     storeLocal: () => void;
     loadFromLocal: () => boolean;
     logout: () => void;
-    login: (email: string, password: string) => Promise<boolean>;
+    login: (email: string, password: string, set_cookie?: boolean) => Promise<boolean>;
     isAvailableUsername: (username: string) => Promise<boolean>;
     isAvailableEmail: (email: string) => Promise<boolean>;
     register: (username: string, email: string, password: string) => Promise<boolean>;

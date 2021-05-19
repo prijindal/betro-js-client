@@ -39,6 +39,10 @@ class AuthController {
     return true;
   };
 
+  getToken = (): string => {
+    return this.token;
+  };
+
   storeLocal = () => {
     localStorage.setItem("ENCRYPTION_KEY", this.encryptionKey);
     localStorage.setItem("TOKEN", this.token);
@@ -68,11 +72,15 @@ class AuthController {
     this.symKey = "";
   };
 
-  login = async (email: string, password: string): Promise<boolean> => {
+  login = async (
+    email: string,
+    password: string,
+    set_cookie: boolean = false
+  ): Promise<boolean> => {
     const masterKey = await getMasterKey(email, password);
     const masterHash = await getMasterHash(masterKey, password);
     const response = await this.instance.post(
-      `/api/login?set_cookie=${this.host === window.location.origin}`,
+      `/api/login?set_cookie=${set_cookie}`,
       {
         email,
         master_hash: masterHash,
@@ -86,7 +94,6 @@ class AuthController {
         "Authorization"
       ] = `Bearer ${token}`;
     }
-    this.storeLocal();
     return true;
   };
 
@@ -140,7 +147,6 @@ class AuthController {
         "Authorization"
       ] = `Bearer ${token}`;
     }
-    this.storeLocal();
     return true;
   };
 }

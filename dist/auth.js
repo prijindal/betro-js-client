@@ -21,6 +21,9 @@ class AuthController {
             }
             return true;
         };
+        this.getToken = () => {
+            return this.token;
+        };
         this.storeLocal = () => {
             localStorage.setItem("ENCRYPTION_KEY", this.encryptionKey);
             localStorage.setItem("TOKEN", this.token);
@@ -46,10 +49,10 @@ class AuthController {
             this.privateKey = "";
             this.symKey = "";
         };
-        this.login = async (email, password) => {
+        this.login = async (email, password, set_cookie = false) => {
             const masterKey = await betro_js_lib_1.getMasterKey(email, password);
             const masterHash = await betro_js_lib_1.getMasterHash(masterKey, password);
-            const response = await this.instance.post(`/api/login?set_cookie=${this.host === window.location.origin}`, {
+            const response = await this.instance.post(`/api/login?set_cookie=${set_cookie}`, {
                 email,
                 master_hash: masterHash,
             });
@@ -59,7 +62,6 @@ class AuthController {
                 this.token = token;
                 this.instance.defaults.headers.common["Authorization"] = `Bearer ${token}`;
             }
-            this.storeLocal();
             return true;
         };
         this.isAvailableUsername = async (username) => {
@@ -99,7 +101,6 @@ class AuthController {
                 this.token = token;
                 this.instance.defaults.headers.common["Authorization"] = `Bearer ${token}`;
             }
-            this.storeLocal();
             return true;
         };
         this.host = host;

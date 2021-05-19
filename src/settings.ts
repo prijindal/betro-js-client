@@ -19,7 +19,7 @@ class SettingsController {
   changeUserSettings = async (
     type: UserSettingsType,
     enabled: boolean
-  ): Promise<null> => {
+  ): Promise<UserSettingResponse | null> => {
     try {
       const response = await this.auth.instance.post(`/api/settings`, {
         type,

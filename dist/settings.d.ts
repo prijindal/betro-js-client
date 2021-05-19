@@ -4,6 +4,6 @@ declare class SettingsController {
     auth: AuthController;
     constructor(auth: AuthController);
     fetchUserSettings: () => Promise<Array<UserSettingResponse> | null>;
-    changeUserSettings: (type: UserSettingsType, enabled: boolean) => Promise<null>;
+    changeUserSettings: (type: UserSettingsType, enabled: boolean) => Promise<UserSettingResponse | null>;
 }
 export default SettingsController;
