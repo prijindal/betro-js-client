@@ -6,7 +6,7 @@
     "declaration": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "target": "ESNext",
+    "target": "es2018",
     "skipLibCheck": true,
     "noImplicitAny": true,
     "moduleResolution": "Node",

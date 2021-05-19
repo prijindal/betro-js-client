@@ -158,7 +158,7 @@ class AccountController {
         request.profile_picture = encrypted_profile_picture;
       }
       const response = await this.auth.instance.post(
-        `/api/account/profile`,
+        "/api/account/profile",
         request
       );
       const data = response.data;

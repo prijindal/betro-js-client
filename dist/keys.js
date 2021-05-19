@@ -72,7 +72,7 @@ class KeysController {
                         id,
                         publicKey: public_key,
                         claimed,
-                        privateKey: privateKey?.toString("base64"),
+                        privateKey: privateKey === null || privateKey === void 0 ? void 0 : privateKey.toString("base64"),
                     };
                 }
             }

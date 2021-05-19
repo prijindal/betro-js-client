@@ -44,7 +44,7 @@ class PostController {
                 if (media != null && sym_key != null) {
                     encryptedMedia = await betro_js_lib_1.symEncrypt(sym_key.toString("base64"), media);
                 }
-                const response = await this.auth.instance.post(`/api/post`, {
+                const response = await this.auth.instance.post("/api/post", {
                     group_id: group_id,
                     text_content: encryptedText,
                     media_content: encryptedMedia,

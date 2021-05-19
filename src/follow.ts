@@ -132,7 +132,7 @@ class FollowController {
         derivedKey,
         Buffer.from(this.auth.symKey, "base64")
       );
-      const response = await this.auth.instance.post(`/api/follow/`, {
+      const response = await this.auth.instance.post("/api/follow/", {
         followee_id: followee_id,
         own_key_id: ownKeyPair.id,
         followee_key_id: followee_key_id,
@@ -174,7 +174,7 @@ class FollowController {
           derivedKey,
           Buffer.from(this.auth.symKey, "base64")
         );
-        const response = await this.auth.instance.post(`/api/follow/approve`, {
+        const response = await this.auth.instance.post("/api/follow/approve", {
           follow_id: followId,
           group_id: group_id,
           encrypted_group_sym_key,

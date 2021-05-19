@@ -24,8 +24,8 @@ const parseUserGrant = async (encryptionKey, row) => {
             const profile_picture_bytes = row.profile_picture != null
                 ? await betro_js_lib_1.symDecrypt(sym_key, row.profile_picture)
                 : null;
-            response.first_name = first_name_bytes?.toString("utf-8");
-            response.last_name = last_name_bytes?.toString("utf-8");
+            response.first_name = first_name_bytes === null || first_name_bytes === void 0 ? void 0 : first_name_bytes.toString("utf-8");
+            response.last_name = last_name_bytes === null || last_name_bytes === void 0 ? void 0 : last_name_bytes.toString("utf-8");
             if (profile_picture_bytes != null) {
                 response.profile_picture = bufferToImage_1.bufferToImageUrl(profile_picture_bytes);
             }

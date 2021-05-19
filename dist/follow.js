@@ -86,7 +86,7 @@ class FollowController {
                 const ownKeyPair = this.auth.ecdhKeys[Object.keys(this.auth.ecdhKeys)[0]];
                 const derivedKey = await betro_js_lib_1.deriveExchangeSymKey(followee_public_key, ownKeyPair.privateKey);
                 const encrypted_profile_sym_key = await betro_js_lib_1.symEncrypt(derivedKey, Buffer.from(this.auth.symKey, "base64"));
-                const response = await this.auth.instance.post(`/api/follow/`, {
+                const response = await this.auth.instance.post("/api/follow/", {
                     followee_id: followee_id,
                     own_key_id: ownKeyPair.id,
                     followee_key_id: followee_key_id,
@@ -107,7 +107,7 @@ class FollowController {
                 if (decryptedGroupSymKey != null) {
                     const encrypted_group_sym_key = await betro_js_lib_1.symEncrypt(derivedKey, decryptedGroupSymKey);
                     const encrypted_profile_sym_key = await betro_js_lib_1.symEncrypt(derivedKey, Buffer.from(this.auth.symKey, "base64"));
-                    const response = await this.auth.instance.post(`/api/follow/approve`, {
+                    const response = await this.auth.instance.post("/api/follow/approve", {
                         follow_id: followId,
                         group_id: group_id,
                         encrypted_group_sym_key,

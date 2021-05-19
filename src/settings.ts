@@ -8,7 +8,7 @@ class SettingsController {
   }
   fetchUserSettings = async (): Promise<Array<UserSettingResponse> | null> => {
     try {
-      const response = await this.auth.instance.get(`/api/settings`);
+      const response = await this.auth.instance.get("/api/settings");
       const data = response.data;
       return data;
     } catch (e) {
@@ -21,7 +21,7 @@ class SettingsController {
     enabled: boolean
   ): Promise<UserSettingResponse | null> => {
     try {
-      const response = await this.auth.instance.post(`/api/settings`, {
+      const response = await this.auth.instance.post("/api/settings", {
         type,
         enabled,
       });

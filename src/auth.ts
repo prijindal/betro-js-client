@@ -132,7 +132,7 @@ class AuthController {
       encryptionKey,
       Buffer.from(symKey, "base64")
     );
-    const response = await this.instance.post(`/api/register`, {
+    const response = await this.instance.post("/api/register", {
       username,
       email,
       master_hash: masterHash,

@@ -10,7 +10,7 @@ class GroupController {
   }
   fetchGroups = async (): Promise<Array<GroupResponse> | null> => {
     try {
-      const response = await this.auth.instance.get(`/api/groups`);
+      const response = await this.auth.instance.get("/api/groups");
       const data = response.data;
       return data;
     } catch (e) {
@@ -44,7 +44,7 @@ class GroupController {
       Buffer.from(sym_key, "base64")
     );
     try {
-      const response = await this.auth.instance.post(`/api/groups`, {
+      const response = await this.auth.instance.post("/api/groups", {
         name: name,
         sym_key: encryptedSymKey,
         is_default: is_default,

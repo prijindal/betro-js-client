@@ -25,11 +25,11 @@ class AccountController {
             let last_name;
             if (data.first_name != null) {
                 const first_name_bytes = await betro_js_lib_1.symDecrypt(this.auth.symKey, data.first_name);
-                first_name = first_name_bytes?.toString("utf-8");
+                first_name = first_name_bytes === null || first_name_bytes === void 0 ? void 0 : first_name_bytes.toString("utf-8");
             }
             if (data.last_name != null) {
                 const last_name_bytes = await betro_js_lib_1.symDecrypt(this.auth.symKey, data.last_name);
-                last_name = last_name_bytes?.toString("utf-8");
+                last_name = last_name_bytes === null || last_name_bytes === void 0 ? void 0 : last_name_bytes.toString("utf-8");
             }
             return {
                 user_id: data.user_id,
@@ -104,7 +104,7 @@ class AccountController {
                     const encrypted_profile_picture = await betro_js_lib_1.symEncrypt(this.auth.symKey, profile_picture);
                     request.profile_picture = encrypted_profile_picture;
                 }
-                const response = await this.auth.instance.post(`/api/account/profile`, request);
+                const response = await this.auth.instance.post("/api/account/profile", request);
                 const data = response.data;
                 return data;
             }

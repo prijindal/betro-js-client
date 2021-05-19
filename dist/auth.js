@@ -88,7 +88,7 @@ class AuthController {
             const encryptionKey = await betro_js_lib_1.getEncryptionKey(masterKey);
             const symKey = await betro_js_lib_1.generateSymKey();
             const encryptedSymKey = await betro_js_lib_1.symEncrypt(encryptionKey, Buffer.from(symKey, "base64"));
-            const response = await this.instance.post(`/api/register`, {
+            const response = await this.instance.post("/api/register", {
                 username,
                 email,
                 master_hash: masterHash,

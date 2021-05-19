@@ -10,7 +10,7 @@ class NotificationController {
   fetchNotifications =
     async (): Promise<Array<NotificationResponse> | null> => {
       try {
-        const response = await this.auth.instance.get(`/api/notifications`);
+        const response = await this.auth.instance.get("/api/notifications");
         const data = response.data;
         return data;
       } catch (e) {
@@ -21,7 +21,7 @@ class NotificationController {
   readNotification = async (notification_id: string): Promise<boolean> => {
     try {
       const response = await this.auth.instance.post(
-        `/api/notifications/read`,
+        "/api/notifications/read",
         {
           notification_id,
         }

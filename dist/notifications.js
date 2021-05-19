@@ -4,7 +4,7 @@ class NotificationController {
     constructor(auth) {
         this.fetchNotifications = async () => {
             try {
-                const response = await this.auth.instance.get(`/api/notifications`);
+                const response = await this.auth.instance.get("/api/notifications");
                 const data = response.data;
                 return data;
             }
@@ -14,7 +14,7 @@ class NotificationController {
         };
         this.readNotification = async (notification_id) => {
             try {
-                const response = await this.auth.instance.post(`/api/notifications/read`, {
+                const response = await this.auth.instance.post("/api/notifications/read", {
                     notification_id,
                 });
                 return response.data.read;

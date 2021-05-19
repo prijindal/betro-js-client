@@ -4,7 +4,7 @@ class SettingsController {
     constructor(auth) {
         this.fetchUserSettings = async () => {
             try {
-                const response = await this.auth.instance.get(`/api/settings`);
+                const response = await this.auth.instance.get("/api/settings");
                 const data = response.data;
                 return data;
             }
@@ -14,7 +14,7 @@ class SettingsController {
         };
         this.changeUserSettings = async (type, enabled) => {
             try {
-                const response = await this.auth.instance.post(`/api/settings`, {
+                const response = await this.auth.instance.post("/api/settings", {
                     type,
                     enabled,
                 });
