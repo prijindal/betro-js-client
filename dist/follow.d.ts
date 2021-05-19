@@ -12,9 +12,7 @@ declare class FollowController {
         email: string;
     } | null>;
     approveUser: (followId: string, follower_public_key: string, group_id: string, encrypted_by_user_group_sym_key: string, own_key_id: string, private_key: string) => Promise<{
-        is_following: boolean;
-        is_approved: boolean;
-        email: string;
+        approved: boolean;
     } | null>;
     fetchUserEcdhKey: (id: string) => Promise<{
         id: string;

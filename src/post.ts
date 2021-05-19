@@ -7,6 +7,7 @@ import {
   PostResource,
   PostResourceUser,
   LikeResponse,
+  PostResponse,
 } from "./types";
 
 class PostController {
@@ -60,7 +61,7 @@ class PostController {
     text: string | null,
     media_encoding: string | null,
     media: Buffer | null
-  ): Promise<null> => {
+  ): Promise<PostResponse | null> => {
     try {
       const sym_key = await symDecrypt(
         this.auth.encryptionKey,

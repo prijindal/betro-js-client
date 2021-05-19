@@ -154,9 +154,7 @@ class FollowController {
     own_key_id: string,
     private_key: string
   ): Promise<{
-    is_following: boolean;
-    is_approved: boolean;
-    email: string;
+    approved: boolean;
   } | null> => {
     const decryptedGroupSymKey = await symDecrypt(
       this.auth.encryptionKey,

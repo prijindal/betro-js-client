@@ -7,8 +7,8 @@ exports.imageUrlToBuffer = exports.bufferToImageUrl = void 0;
 const axios_1 = __importDefault(require("axios"));
 const bufferToImageUrl = (buffer) => {
     const arrayBufferView = new Uint8Array(buffer);
-    if (Blob != null) {
-        const blob = new Blob([arrayBufferView], { type: "image/jpeg" });
+    if (window.Blob != null) {
+        const blob = new window.Blob([arrayBufferView], { type: "image/jpeg" });
         const urlCreator = window.URL || window.webkitURL;
         if (urlCreator != null) {
             const imageUrl = urlCreator.createObjectURL(blob);

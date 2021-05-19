@@ -21,9 +21,7 @@ class GroupController {
   deleteGroup = async (
     groupId: string
   ): Promise<{
-    is_following: boolean;
-    is_approved: boolean;
-    email: string;
+    deleted: boolean;
   } | null> => {
     try {
       const response = await this.auth.instance.delete(
