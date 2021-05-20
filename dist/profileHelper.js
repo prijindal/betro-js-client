@@ -7,27 +7,29 @@ const parseUserGrant = async (encryptionKey, row) => {
     const response = {};
     if (row.own_private_key != null) {
         const privateKey = await betro_js_lib_1.symDecrypt(encryptionKey, row.own_private_key);
-        if (privateKey != null &&
-            row.public_key != null &&
-            row.encrypted_profile_sym_key != null) {
+        if (privateKey != null) {
             response.own_private_key = privateKey.toString("base64");
-            const derivedKey = await betro_js_lib_1.deriveExchangeSymKey(row.public_key, response.own_private_key);
-            const sym_key_bytes = await betro_js_lib_1.symDecrypt(derivedKey, row.encrypted_profile_sym_key);
-            if (sym_key_bytes == null) {
-                return response;
-            }
-            const sym_key = sym_key_bytes.toString("base64");
-            const first_name_bytes = row.first_name != null
-                ? await betro_js_lib_1.symDecrypt(sym_key, row.first_name)
-                : null;
-            const last_name_bytes = row.last_name != null ? await betro_js_lib_1.symDecrypt(sym_key, row.last_name) : null;
-            const profile_picture_bytes = row.profile_picture != null
-                ? await betro_js_lib_1.symDecrypt(sym_key, row.profile_picture)
-                : null;
-            response.first_name = first_name_bytes === null || first_name_bytes === void 0 ? void 0 : first_name_bytes.toString("utf-8");
-            response.last_name = last_name_bytes === null || last_name_bytes === void 0 ? void 0 : last_name_bytes.toString("utf-8");
-            if (profile_picture_bytes != null) {
-                response.profile_picture = bufferToImage_1.bufferToImageUrl(profile_picture_bytes);
+            if (row.public_key != null && row.encrypted_profile_sym_key != null) {
+                const derivedKey = await betro_js_lib_1.deriveExchangeSymKey(row.public_key, response.own_private_key);
+                const sym_key_bytes = await betro_js_lib_1.symDecrypt(derivedKey, row.encrypted_profile_sym_key);
+                if (sym_key_bytes == null) {
+                    return response;
+                }
+                const sym_key = sym_key_bytes.toString("base64");
+                const first_name_bytes = row.first_name != null
+                    ? await betro_js_lib_1.symDecrypt(sym_key, row.first_name)
+                    : null;
+                const last_name_bytes = row.last_name != null
+                    ? await betro_js_lib_1.symDecrypt(sym_key, row.last_name)
+                    : null;
+                const profile_picture_bytes = row.profile_picture != null
+                    ? await betro_js_lib_1.symDecrypt(sym_key, row.profile_picture)
+                    : null;
+                response.first_name = first_name_bytes === null || first_name_bytes === void 0 ? void 0 : first_name_bytes.toString("utf-8");
+                response.last_name = last_name_bytes === null || last_name_bytes === void 0 ? void 0 : last_name_bytes.toString("utf-8");
+                if (profile_picture_bytes != null) {
+                    response.profile_picture = bufferToImage_1.bufferToImageUrl(profile_picture_bytes);
+                }
             }
         }
     }

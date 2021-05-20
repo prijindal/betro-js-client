@@ -116,7 +116,7 @@ class FollowController {
   followUser = async (
     followee_id: string,
     followee_key_id: string,
-    followee_public_key: string
+    followee_public_key?: string | null
   ): Promise<{
     is_following: boolean;
     is_approved: boolean;
@@ -124,14 +124,17 @@ class FollowController {
   } | null> => {
     try {
       const ownKeyPair = this.auth.ecdhKeys[Object.keys(this.auth.ecdhKeys)[0]];
-      const derivedKey = await deriveExchangeSymKey(
-        followee_public_key,
-        ownKeyPair.privateKey
-      );
-      const encrypted_profile_sym_key = await symEncrypt(
-        derivedKey,
-        Buffer.from(this.auth.symKey, "base64")
-      );
+      let encrypted_profile_sym_key = null;
+      if (followee_public_key != null) {
+        const derivedKey = await deriveExchangeSymKey(
+          followee_public_key,
+          ownKeyPair.privateKey
+        );
+        encrypted_profile_sym_key = await symEncrypt(
+          derivedKey,
+          Buffer.from(this.auth.symKey, "base64")
+        );
+      }
       const response = await this.auth.instance.post("/api/follow/", {
         followee_id: followee_id,
         own_key_id: ownKeyPair.id,
@@ -152,7 +155,8 @@ class FollowController {
     group_id: string,
     encrypted_by_user_group_sym_key: string,
     own_key_id: string,
-    private_key: string
+    private_key: string,
+    allowProfileRead: boolean = false
   ): Promise<{
     approved: boolean;
   } | null> => {
@@ -170,10 +174,13 @@ class FollowController {
           derivedKey,
           decryptedGroupSymKey
         );
-        const encrypted_profile_sym_key = await symEncrypt(
-          derivedKey,
-          Buffer.from(this.auth.symKey, "base64")
-        );
+        let encrypted_profile_sym_key = null;
+        if (allowProfileRead) {
+          encrypted_profile_sym_key = await symEncrypt(
+            derivedKey,
+            Buffer.from(this.auth.symKey, "base64")
+          );
+        }
         const response = await this.auth.instance.post("/api/follow/approve", {
           follow_id: followId,
           group_id: group_id,

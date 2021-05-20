@@ -17,38 +17,38 @@ export const parseUserGrant = async (
   const response: UserProfile = {};
   if (row.own_private_key != null) {
     const privateKey = await symDecrypt(encryptionKey, row.own_private_key);
-    if (
-      privateKey != null &&
-      row.public_key != null &&
-      row.encrypted_profile_sym_key != null
-    ) {
+    if (privateKey != null) {
       response.own_private_key = privateKey.toString("base64");
-      const derivedKey = await deriveExchangeSymKey(
-        row.public_key,
-        response.own_private_key
-      );
-      const sym_key_bytes = await symDecrypt(
-        derivedKey,
-        row.encrypted_profile_sym_key
-      );
-      if (sym_key_bytes == null) {
-        return response;
-      }
-      const sym_key = sym_key_bytes.toString("base64");
-      const first_name_bytes =
-        row.first_name != null
-          ? await symDecrypt(sym_key, row.first_name)
-          : null;
-      const last_name_bytes =
-        row.last_name != null ? await symDecrypt(sym_key, row.last_name) : null;
-      const profile_picture_bytes =
-        row.profile_picture != null
-          ? await symDecrypt(sym_key, row.profile_picture)
-          : null;
-      response.first_name = first_name_bytes?.toString("utf-8");
-      response.last_name = last_name_bytes?.toString("utf-8");
-      if (profile_picture_bytes != null) {
-        response.profile_picture = bufferToImageUrl(profile_picture_bytes);
+      if (row.public_key != null && row.encrypted_profile_sym_key != null) {
+        const derivedKey = await deriveExchangeSymKey(
+          row.public_key,
+          response.own_private_key
+        );
+        const sym_key_bytes = await symDecrypt(
+          derivedKey,
+          row.encrypted_profile_sym_key
+        );
+        if (sym_key_bytes == null) {
+          return response;
+        }
+        const sym_key = sym_key_bytes.toString("base64");
+        const first_name_bytes =
+          row.first_name != null
+            ? await symDecrypt(sym_key, row.first_name)
+            : null;
+        const last_name_bytes =
+          row.last_name != null
+            ? await symDecrypt(sym_key, row.last_name)
+            : null;
+        const profile_picture_bytes =
+          row.profile_picture != null
+            ? await symDecrypt(sym_key, row.profile_picture)
+            : null;
+        response.first_name = first_name_bytes?.toString("utf-8");
+        response.last_name = last_name_bytes?.toString("utf-8");
+        if (profile_picture_bytes != null) {
+          response.profile_picture = bufferToImageUrl(profile_picture_bytes);
+        }
       }
     }
   }
