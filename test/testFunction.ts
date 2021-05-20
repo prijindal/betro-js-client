@@ -1,5 +1,4 @@
 import { UserSettingsType } from "../src";
-import { symEncrypt, symDecrypt } from "betro-js-lib";
 import { GeneratedUser, generateUsers } from "./generateUsers";
 
 export const runTests = (port: string): void => {
@@ -167,8 +166,6 @@ export const runTests = (port: string): void => {
         const user = users[userIndex];
         const group = await user.api.group.createGroup("Followers", true);
         expect(group.id).toBeTruthy();
-        const symKeya = await symDecrypt(user.encryption_key, group.sym_key);
-        users[userIndex].keys.groupSymKey = symKeya.toString("base64");
       }
     }
   });
@@ -179,13 +176,6 @@ export const runTests = (port: string): void => {
         const user = users[userIndex];
         const groups = await user.api.group.fetchGroups();
         expect(groups.length).toEqual(1);
-        const symKeya = await symDecrypt(
-          user.encryption_key,
-          groups[0].sym_key
-        );
-        expect(users[userIndex].keys.groupSymKey).toEqual(
-          symKeya.toString("base64")
-        );
         users[userIndex].groups = groups;
       }
     }
@@ -197,13 +187,6 @@ export const runTests = (port: string): void => {
         const user = users[userIndex];
         await user.api.keys.getExistingEcdhKeys();
         expect(Object.keys(user.api.auth.ecdhKeys).length).toEqual(25);
-        users[userIndex].keys.ecdhKeys = Object.values(
-          user.api.auth.ecdhKeys
-        ).map((a) => ({
-          id: a.id,
-          public_key: a.publicKey,
-          private_key: a.privateKey,
-        }));
       }
     }
   });
@@ -211,11 +194,12 @@ export const runTests = (port: string): void => {
     // User 1 send follow request to user2
     const user1 = users[0];
     const user2 = users[1];
-    const ecdhKeyPair = user2.keys.ecdhKeys[0];
+    const ecdhKeyId = Object.keys(user2.api.auth.ecdhKeys)[0];
+    const ecdhKeyPair = user2.api.auth.ecdhKeys[ecdhKeyId];
     const followUser = await user1.api.follow.followUser(
       user2.id,
       ecdhKeyPair.id,
-      ecdhKeyPair.public_key
+      ecdhKeyPair.publicKey
     );
     expect(followUser.is_approved).toEqual(false);
   });
@@ -251,20 +235,18 @@ export const runTests = (port: string): void => {
     const publicKey = data[0].public_key;
     const own_key_id = data[0].own_key_id;
     const first_name = data[0].first_name;
-    const ownKeyPair = user2.keys.ecdhKeys.find((a) => a.id == own_key_id);
+    const ecdhKeyId = Object.keys(user2.api.auth.ecdhKeys)[0];
+    const ownKeyPair = user2.api.auth.ecdhKeys[ecdhKeyId];
     expect(ownKeyPair).not.toBeNull();
     expect(first_name).toEqual(user1.profile.first_name);
-    const symKey = await symEncrypt(
-      user2.encryption_key,
-      Buffer.from(user2.keys.groupSymKey, "base64")
-    );
     const approved = await user2.api.follow.approveUser(
       data[0].id,
       publicKey,
       user2.groups[0].id,
-      symKey,
+      user2.groups[0].sym_key,
       own_key_id,
-      ownKeyPair.private_key
+      ownKeyPair.privateKey,
+      true
     );
     expect(approved).toBeTruthy();
     expect(approved.approved).toEqual(true);
@@ -299,14 +281,10 @@ export const runTests = (port: string): void => {
   });
   it("Create new post", async () => {
     const user2 = users[1];
-    const symKey = await symEncrypt(
-      user2.encryption_key,
-      Buffer.from(user2.keys.groupSymKey, "base64")
-    );
     const data = "My First Post";
     const post = await user2.api.post.createPost(
       user2.groups[0].id,
-      symKey,
+      user2.groups[0].sym_key,
       data,
       null,
       null
