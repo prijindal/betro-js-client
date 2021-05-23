@@ -279,6 +279,16 @@ export const runTests = (port: string): void => {
       user2.credentials.username
     );
   });
+  it("Read notification", async () => {
+    const user1 = users[0];
+    let notifications = await user1.api.notifications.fetchNotifications();
+    const read = await user1.api.notifications.readNotification(
+      notifications[0].id
+    );
+    expect(read).toEqual(true);
+    notifications = await user1.api.notifications.fetchNotifications();
+    expect(notifications[0].read).toEqual(true);
+  });
   it("Create new post", async () => {
     const user2 = users[1];
     const data = "My First Post";
@@ -320,6 +330,34 @@ export const runTests = (port: string): void => {
     expect(homeFeed.data.length).toEqual(1);
     expect(homeFeed.data[0].user.username).toEqual(user2.credentials.username);
   });
+  it("Fetches own posts", async () => {
+    const user2 = users[1];
+    const posts = await user2.api.feed.fetchOwnPosts(null);
+    expect(posts.data.length).toEqual(1);
+    expect(posts.data[0].likes).toEqual(0);
+    expect(posts.data[0].text_content).toEqual("My First Post");
+  });
+  it("Like post", async () => {
+    const user1 = users[0];
+    const homeFeed = await user1.api.feed.fetchHomeFeed(null);
+    const likePosts = await user1.api.post.like(homeFeed.data[0].id);
+    expect(likePosts.liked).toEqual(true);
+    expect(likePosts.likes).toEqual(1);
+  });
+  it("Fetch post", async () => {
+    const user1 = users[0];
+    const homeFeed = await user1.api.feed.fetchHomeFeed(null);
+    const post = await user1.api.post.getPost(homeFeed.data[0].id);
+    expect(post.likes).toEqual(1);
+    expect(post.text_content).toEqual("My First Post");
+  });
+  it("Unike post", async () => {
+    const user1 = users[0];
+    const homeFeed = await user1.api.feed.fetchHomeFeed(null);
+    const likePosts = await user1.api.post.unlike(homeFeed.data[0].id);
+    expect(likePosts.liked).toEqual(false);
+    expect(likePosts.likes).toEqual(0);
+  });
   it("Deletes group", async () => {
     for (const email in tokenMap) {
       if (Object.prototype.hasOwnProperty.call(tokenMap, email)) {
@@ -333,19 +371,23 @@ export const runTests = (port: string): void => {
     }
   });
   it("Checks count", async () => {
-    for (const email in tokenMap) {
-      if (Object.prototype.hasOwnProperty.call(tokenMap, email)) {
-        const userIndex = users.findIndex((a) => a.credentials.email == email);
-        const user = users[userIndex];
-        const counts = await user.api.account.fetchCounts();
-        expect(counts.notifications).toEqual(1);
-        expect(counts.settings).toEqual(3);
-        expect(counts.groups).toEqual(0);
-        expect(counts.followers).toEqual(0);
-        expect(counts.followees).toEqual(0);
-        expect(counts.approvals).toEqual(0);
-        expect(counts.posts).toEqual(0);
-      }
-    }
+    const user1 = users[0];
+    const countsUser1 = await user1.api.account.fetchCounts();
+    expect(countsUser1.notifications).toEqual(0);
+    expect(countsUser1.settings).toEqual(3);
+    expect(countsUser1.groups).toEqual(0);
+    expect(countsUser1.followers).toEqual(0);
+    expect(countsUser1.followees).toEqual(0);
+    expect(countsUser1.approvals).toEqual(0);
+    expect(countsUser1.posts).toEqual(0);
+    const user2 = users[1];
+    const countsUser2 = await user2.api.account.fetchCounts();
+    expect(countsUser2.notifications).toEqual(1);
+    expect(countsUser2.settings).toEqual(3);
+    expect(countsUser2.groups).toEqual(0);
+    expect(countsUser2.followers).toEqual(0);
+    expect(countsUser2.followees).toEqual(0);
+    expect(countsUser2.approvals).toEqual(0);
+    expect(countsUser2.posts).toEqual(0);
   });
 };
