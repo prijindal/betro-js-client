@@ -22,6 +22,7 @@ const notifications_1 = __importDefault(require("./notifications"));
 const settings_1 = __importDefault(require("./settings"));
 const post_1 = __importDefault(require("./post"));
 const keys_1 = __importDefault(require("./keys"));
+const conversation_1 = __importDefault(require("./conversation"));
 __exportStar(require("./types"), exports);
 __exportStar(require("./bufferToImage"), exports);
 class BetroApi {
@@ -52,6 +53,9 @@ class BetroApi {
     }
     get post() {
         return new post_1.default(this.auth);
+    }
+    get conversation() {
+        return new conversation_1.default(this.auth);
     }
 }
 exports.default = BetroApi;

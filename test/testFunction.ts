@@ -5,7 +5,7 @@ export const runTests = (port: string): void => {
   let users: Array<GeneratedUser> = [];
   const tokenMap: { [email: string]: string } = {};
   beforeAll(async () => {
-    users = await generateUsers(port);
+    users = await generateUsers(port, 3);
   });
   it("Check email availability", async () => {
     for await (const user of users) {
@@ -369,6 +369,56 @@ export const runTests = (port: string): void => {
         expect(deletedGroup.deleted).toEqual(true);
       }
     }
+  });
+  it("Create conversation", async () => {
+    const user1 = users[0];
+    const user3 = users[2];
+    const ecdhKeyId = Object.keys(user3.api.auth.ecdhKeys)[0];
+    const ecdhKey = user3.api.auth.ecdhKeys[ecdhKeyId];
+    const conversation = await user1.api.conversation.createConversation(
+      user3.id,
+      ecdhKeyId
+    );
+    expect(conversation.first_name).toEqual(null);
+    expect(conversation.user_id).toEqual(user3.id);
+    expect(conversation.public_key).toEqual(ecdhKey.publicKey);
+  });
+  it("Checks conversation", async () => {
+    const user1 = users[0];
+    const user3 = users[2];
+    const conversations = await user3.api.conversation.fetchConversations(
+      undefined
+    );
+    expect(conversations.data.length).toEqual(1);
+    expect(conversations.data[0].user_id).toEqual(user1.id);
+  });
+  it("Sends message", async () => {
+    const user3 = users[2];
+    const conversations = await user3.api.conversation.fetchConversations(
+      undefined
+    );
+    const conversation = conversations.data[0];
+    const message = await user3.api.conversation.sendMessage(
+      conversation.id,
+      conversation.own_private_key,
+      conversation.public_key,
+      "Hello"
+    );
+    expect(message.id).not.toBeNull();
+  });
+  it("Fetches messages", async () => {
+    const user1 = users[0];
+    const conversations = await user1.api.conversation.fetchConversations(
+      undefined
+    );
+    const conversation = conversations.data[0];
+    const messages = await user1.api.conversation.fetchMessages(
+      conversation.id,
+      conversation.own_private_key,
+      conversation.public_key
+    );
+    expect(messages.data.length).toEqual(1);
+    expect(messages.data[0].message).toEqual("Hello");
   });
   it("Checks count", async () => {
     const user1 = users[0];

@@ -7,6 +7,7 @@ import NotificationController from "./notifications";
 import SettingsController from "./settings";
 import PostController from "./post";
 import KeysController from "./keys";
+import ConversationController from "./conversation";
 export * from "./types";
 export * from "./bufferToImage";
 
@@ -48,6 +49,10 @@ class BetroApi {
 
   get post() {
     return new PostController(this.auth);
+  }
+
+  get conversation() {
+    return new ConversationController(this.auth);
   }
 }
 

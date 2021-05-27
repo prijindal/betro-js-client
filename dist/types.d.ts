@@ -171,3 +171,10 @@ export interface LikeResponse {
     liked: boolean;
     likes?: number;
 }
+export interface MessageResponse {
+    id: string;
+    conversation_id: string;
+    sender_id: string;
+    message: string;
+    created_at: Date;
+}

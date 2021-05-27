@@ -50,3 +50,8 @@ export interface SearchResultBackend extends ProfileGrantRow {
 export interface PostUserResponse extends ProfileGrantRow {
   username: string;
 }
+
+export interface ConversationResponseBackend extends ProfileGrantRow {
+  id: string;
+  user_id: string;
+}

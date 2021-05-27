@@ -7,6 +7,7 @@ import NotificationController from "./notifications";
 import SettingsController from "./settings";
 import PostController from "./post";
 import KeysController from "./keys";
+import ConversationController from "./conversation";
 export * from "./types";
 export * from "./bufferToImage";
 declare class BetroApi {
@@ -21,5 +22,6 @@ declare class BetroApi {
     get notifications(): NotificationController;
     get settings(): SettingsController;
     get post(): PostController;
+    get conversation(): ConversationController;
 }
 export default BetroApi;
