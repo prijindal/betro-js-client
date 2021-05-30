@@ -34,7 +34,6 @@ class ConversationController {
         this.fetchConversation = async (id) => {
             try {
                 const response = await this.auth.instance.get(`/api/messages/${id}`);
-                console.log(response.data);
                 let data = response.data;
                 data = {
                     ...response.data,

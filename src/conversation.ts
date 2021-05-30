@@ -50,7 +50,6 @@ class ConversationController {
         await this.auth.instance.get<ConversationResponseBackend>(
           `/api/messages/${id}`
         );
-      console.log(response.data);
       let data = response.data;
       data = {
         ...response.data,
