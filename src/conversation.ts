@@ -80,7 +80,7 @@ class ConversationController {
       const userResponse = await parseUserGrant(this.auth.encryptionKey, data);
       return { ...data, ...userResponse };
     } catch (e) {
-      console.error(e);
+      console.error(e.response.data);
     }
   };
 

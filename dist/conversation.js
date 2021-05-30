@@ -59,7 +59,7 @@ class ConversationController {
                 return { ...data, ...userResponse };
             }
             catch (e) {
-                console.error(e);
+                console.error(e.response.data);
             }
         };
         this.sendMessage = async (conversation_id, private_key, public_key, text_content) => {

@@ -441,6 +441,77 @@ export const runTests = (port: string): void => {
       expect(messages.data[0].message).toEqual("Hello");
     });
   });
+  describe("Conversation between people who have profile grants", () => {
+    it("Create conversation", async () => {
+      const user1 = users[0];
+      const user2 = users[1];
+      const ecdhKeyId = Object.keys(user2.api.auth.ecdhKeys)[0];
+      const ecdhKey = user2.api.auth.ecdhKeys[ecdhKeyId];
+      const conversation = await user1.api.conversation.createConversation(
+        user2.id,
+        ecdhKeyId
+      );
+      expect(conversation.first_name).toEqual(user2.profile.first_name);
+      expect(conversation.user_id).toEqual(user2.id);
+      expect(conversation.public_key).toEqual(ecdhKey.publicKey);
+    });
+    it("Checks conversation", async () => {
+      const user1 = users[0];
+      const user2 = users[1];
+      const conversations = await user2.api.conversation.fetchConversations(
+        undefined
+      );
+      expect(conversations.data.length).toEqual(1);
+      expect(conversations.data[0].user_id).toEqual(user1.id);
+      expect(conversations.data[0].first_name).toEqual(
+        user1.profile.first_name
+      );
+      expect(conversations.data[0].last_name).toEqual(user1.profile.last_name);
+      expect(conversations.data[0].username).toEqual(
+        user1.credentials.username
+      );
+    });
+    it("Fetches conversation", async () => {
+      const user1 = users[0];
+      const user2 = users[1];
+      const conversations = await user1.api.conversation.fetchConversations(
+        undefined
+      );
+      const conversation = await user1.api.conversation.fetchConversation(
+        conversations.data[0].id
+      );
+      expect(conversation.user_id).toEqual(user2.id);
+      expect(conversation.username).toEqual(user2.credentials.username);
+    });
+    it("Sends message", async () => {
+      const user2 = users[1];
+      const conversations = await user2.api.conversation.fetchConversations(
+        undefined
+      );
+      const conversation = conversations.data[0];
+      const message = await user2.api.conversation.sendMessage(
+        conversation.id,
+        conversation.own_private_key,
+        conversation.public_key,
+        "Hello"
+      );
+      expect(message.id).not.toBeNull();
+    });
+    it("Fetches messages", async () => {
+      const user1 = users[0];
+      const conversations = await user1.api.conversation.fetchConversations(
+        undefined
+      );
+      const conversation = conversations.data[0];
+      const messages = await user1.api.conversation.fetchMessages(
+        conversation.id,
+        conversation.own_private_key,
+        conversation.public_key
+      );
+      expect(messages.data.length).toEqual(1);
+      expect(messages.data[0].message).toEqual("Hello");
+    });
+  });
   it("Checks count", async () => {
     const user1 = users[0];
     const countsUser1 = await user1.api.account.fetchCounts();
