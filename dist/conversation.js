@@ -13,10 +13,9 @@ class ConversationController {
                 const response = await this.auth.instance.get(`/api/messages/?limit=${limit}&after=${after}`);
                 const data = [];
                 for (const row of response.data.data) {
-                    const privateKey = await betro_js_lib_1.symDecrypt(this.auth.encryptionKey, row.own_private_key);
                     data.push({
                         ...row,
-                        own_private_key: privateKey.toString("base64"),
+                        ...(await profileHelper_1.parseUserGrant(this.auth.encryptionKey, row)),
                     });
                 }
                 return {
@@ -26,7 +25,22 @@ class ConversationController {
                     after: response.data.after,
                     data: data,
                 };
-                return response.data;
+            }
+            catch (e) {
+                console.error(e);
+                return null;
+            }
+        };
+        this.fetchConversation = async (id) => {
+            try {
+                const response = await this.auth.instance.get(`/api/messages/${id}`);
+                console.log(response.data);
+                let data = response.data;
+                data = {
+                    ...response.data,
+                    ...(await profileHelper_1.parseUserGrant(this.auth.encryptionKey, response.data)),
+                };
+                return data;
             }
             catch (e) {
                 console.error(e);

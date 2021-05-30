@@ -24,13 +24,9 @@ class ConversationController {
       >(`/api/messages/?limit=${limit}&after=${after}`);
       const data: Array<ConversationResponseBackend> = [];
       for (const row of response.data.data) {
-        const privateKey = await symDecrypt(
-          this.auth.encryptionKey,
-          row.own_private_key
-        );
         data.push({
           ...row,
-          own_private_key: privateKey.toString("base64"),
+          ...(await parseUserGrant(this.auth.encryptionKey, row)),
         });
       }
       return {
@@ -40,7 +36,27 @@ class ConversationController {
         after: response.data.after,
         data: data,
       };
-      return response.data;
+    } catch (e) {
+      console.error(e);
+      return null;
+    }
+  };
+
+  fetchConversation = async (
+    id: string
+  ): Promise<ConversationResponseBackend> => {
+    try {
+      const response =
+        await this.auth.instance.get<ConversationResponseBackend>(
+          `/api/messages/${id}`
+        );
+      console.log(response.data);
+      let data = response.data;
+      data = {
+        ...response.data,
+        ...(await parseUserGrant(this.auth.encryptionKey, response.data)),
+      };
+      return data;
     } catch (e) {
       console.error(e);
       return null;
