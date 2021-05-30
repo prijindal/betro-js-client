@@ -12,7 +12,7 @@ class PostController {
             };
             user = {
                 username: resp.user.username,
-                ...profileHelper_1.parseUserGrant(this.auth.encryptionKey, resp.user),
+                ...(await profileHelper_1.parseUserGrant(this.auth.encryptionKey, resp.user)),
             };
             if (resp.user.own_private_key == null || resp.user.public_key == null) {
                 throw Error("Decryption issues");

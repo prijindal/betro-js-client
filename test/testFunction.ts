@@ -310,6 +310,7 @@ export const runTests = (port: string): void => {
     );
     expect(userInfo.username).toEqual(user2.credentials.username);
     expect(userInfo.first_name).toEqual(user2.profile.first_name);
+    expect(userInfo.last_name).toEqual(user2.profile.last_name);
   });
   it("Fetches user posts", async () => {
     const user1 = users[0];
@@ -349,6 +350,7 @@ export const runTests = (port: string): void => {
     const homeFeed = await user1.api.feed.fetchHomeFeed(null);
     const post = await user1.api.post.getPost(homeFeed.data[0].id);
     expect(post.likes).toEqual(1);
+    expect(post.user.first_name).toEqual(users[1].profile.first_name);
     expect(post.text_content).toEqual("My First Post");
   });
   it("Unike post", async () => {
