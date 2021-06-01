@@ -30,25 +30,25 @@
   "homepage": "https://github.com/prijindal/betro-js-client#readme",
   "dependencies": {
     "axios": "^0.21.1",
-    "betro-js-lib": "git+https://prijindal@github.com/betro-app/betro-js-lib.git#325f87f8f08684ea100941418fa5b02d9708356a",
+    "betro-js-lib": "git+https://prijindal@github.com/betro-app/betro-js-lib.git#8894d317133e2ec5be5ad3bf5ae90e64d9954d56",
     "lodash": "^4.17.21"
   },
   "devDependencies": {
-    "@types/faker": "^5.5.5",
+    "@types/faker": "^5.5.6",
     "@types/jest": "^26.0.23",
     "@types/lodash": "^4.14.170",
-    "@types/node": "^15.6.1",
-    "@typescript-eslint/eslint-plugin": "^4.25.0",
-    "@typescript-eslint/parser": "^4.25.0",
+    "@types/node": "^15.6.2",
+    "@typescript-eslint/eslint-plugin": "^4.26.0",
+    "@typescript-eslint/parser": "^4.26.0",
     "eslint": "^7.27.0",
     "eslint-config-prettier": "^8.3.0",
     "faker": "^5.5.3",
     "husky": "^6.0.0",
-    "jest": "^27.0.1",
+    "jest": "^27.0.3",
     "nodemon": "^2.0.7",
     "pre-commit": "^1.2.2",
     "prettier": "^2.3.0",
-    "ts-jest": "^27.0.1",
+    "ts-jest": "^27.0.2",
     "ts-node": "^10.0.0",
     "typescript": "^4.3.2"
   }
