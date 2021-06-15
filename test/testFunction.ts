@@ -79,7 +79,9 @@ export const runTests = (port: string): void => {
         expect(profile.first_name).toEqual(user.profile.first_name);
         expect(profile.last_name).toEqual(user.profile.last_name);
         expect(profile.profile_picture).toEqual(user.profile.profile_picture);
-        expect(profile.sym_key).toEqual(user.api.auth.symKey);
+        expect(profile.sym_key).toEqual(
+          user.api.auth.symKey.toString("base64")
+        );
       }
     }
   });

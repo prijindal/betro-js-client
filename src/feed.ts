@@ -22,7 +22,7 @@ class FeedController {
       post: PostResponse,
       keys: { [key_id: string]: string },
       users: { [user_id: string]: PostUserResponse }
-    ) => Promise<string>
+    ) => Promise<Buffer>
   ): Promise<Array<PostResource>> => {
     const posts: Array<PostResource> = [];
     const users: { [user_id: string]: PostResourceUser } = {};
@@ -70,8 +70,7 @@ class FeedController {
     if (symKey == null) {
       throw Error("Decryption issues");
     }
-    const sym_key = symKey.toString("base64");
-    return sym_key;
+    return symKey;
   };
 
   fetchUserPosts = async (
@@ -119,10 +118,9 @@ class FeedController {
           keys[post.key_id]
         );
         if (symKey != null) {
-          const sym_key = symKey.toString("base64");
-          return sym_key;
+          return symKey;
         }
-        return "";
+        return null;
       });
       return {
         data,

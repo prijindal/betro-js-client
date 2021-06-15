@@ -30,7 +30,7 @@
   "homepage": "https://github.com/prijindal/betro-js-client#readme",
   "dependencies": {
     "axios": "^0.21.1",
-    "betro-js-lib": "git+https://prijindal@github.com/betro-app/betro-js-lib.git#8549c405c56c76cd8fd700a8e1e34b64768a3bc4",
+    "betro-js-lib": "git+https://prijindal@github.com/betro-app/betro-js-lib.git#353a4026b802815accd6bd0da95f5d00b31e63aa",
     "lodash": "^4.17.21"
   },
   "devDependencies": {

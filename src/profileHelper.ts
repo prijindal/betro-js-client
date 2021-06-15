@@ -1,4 +1,8 @@
-import { deriveExchangeSymKey, symDecrypt } from "betro-js-lib";
+import {
+  deriveExchangeSymKey,
+  symDecrypt,
+  symDecryptBuffer,
+} from "betro-js-lib";
 import { bufferToImageUrl } from "./bufferToImage";
 import { PostResponse } from "./types";
 import { ProfileGrantRow } from "./UserResponses";
@@ -31,18 +35,17 @@ export const parseUserGrant = async (
         if (sym_key_bytes == null) {
           return response;
         }
-        const sym_key = sym_key_bytes.toString("base64");
         const first_name_bytes =
           row.first_name != null
-            ? await symDecrypt(sym_key, row.first_name)
+            ? await symDecryptBuffer(sym_key_bytes, row.first_name)
             : null;
         const last_name_bytes =
           row.last_name != null
-            ? await symDecrypt(sym_key, row.last_name)
+            ? await symDecryptBuffer(sym_key_bytes, row.last_name)
             : null;
         const profile_picture_bytes =
           row.profile_picture != null
-            ? await symDecrypt(sym_key, row.profile_picture)
+            ? await symDecryptBuffer(sym_key_bytes, row.profile_picture)
             : null;
         response.first_name = first_name_bytes?.toString("utf-8");
         response.last_name = last_name_bytes?.toString("utf-8");
@@ -57,7 +60,7 @@ export const parseUserGrant = async (
 
 export const parsePost = async (
   post: PostResponse,
-  sym_key: string
+  sym_key: Buffer
 ): Promise<{
   id: string;
   text_content: string | null;
@@ -70,13 +73,13 @@ export const parsePost = async (
   let text_content: string | null = null;
   let media_content: string | null = null;
   if (post.text_content !== null) {
-    const text = await symDecrypt(sym_key, post.text_content);
+    const text = await symDecryptBuffer(sym_key, post.text_content);
     if (text != null) {
       text_content = text.toString("utf-8");
     }
   }
   if (post.media_content !== null) {
-    const media = await symDecrypt(sym_key, post.media_content);
+    const media = await symDecryptBuffer(sym_key, post.media_content);
     if (media != null) {
       media_content = bufferToImageUrl(media);
     }

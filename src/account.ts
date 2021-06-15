@@ -1,5 +1,5 @@
 import { AxiosResponse } from "axios";
-import { symDecrypt, symEncrypt } from "betro-js-lib";
+import { symDecrypt, symDecryptBuffer, symEncrypt } from "betro-js-lib";
 import AuthController from "./auth";
 import {
   CountResponse,
@@ -22,7 +22,7 @@ class AccountController {
         "/api/account/profile_picture"
       );
       const data = response.data;
-      const profile_picture = await symDecrypt(this.auth.symKey, data);
+      const profile_picture = await symDecryptBuffer(this.auth.symKey, data);
       return profile_picture;
     } catch (e) {
       return null;
@@ -36,14 +36,14 @@ class AccountController {
     let first_name: string | undefined;
     let last_name: string | undefined;
     if (data.first_name != null) {
-      const first_name_bytes = await symDecrypt(
+      const first_name_bytes = await symDecryptBuffer(
         this.auth.symKey,
         data.first_name
       );
       first_name = first_name_bytes?.toString("utf-8");
     }
     if (data.last_name != null) {
-      const last_name_bytes = await symDecrypt(
+      const last_name_bytes = await symDecryptBuffer(
         this.auth.symKey,
         data.last_name
       );
@@ -100,11 +100,16 @@ class AccountController {
         encrypted_sym_key
       );
       if (symDecrypted != null) {
-        const sym_key = symDecrypted.toString("base64");
-        const first_name = await symDecrypt(sym_key, encrypted_first_name);
-        const last_name = await symDecrypt(sym_key, encrypted_last_name);
-        const profile_picture = await symDecrypt(
-          sym_key,
+        const first_name = await symDecryptBuffer(
+          symDecrypted,
+          encrypted_first_name
+        );
+        const last_name = await symDecryptBuffer(
+          symDecrypted,
+          encrypted_last_name
+        );
+        const profile_picture = await symDecryptBuffer(
+          symDecrypted,
           encrypted_profile_picture
         );
         if (
@@ -118,7 +123,7 @@ class AccountController {
           first_name: first_name.toString("utf-8"),
           last_name: last_name.toString("utf-8"),
           profile_picture: profile_picture,
-          sym_key: sym_key,
+          sym_key: symDecrypted.toString("base64"),
         };
       }
       return null;
@@ -135,14 +140,14 @@ class AccountController {
     try {
       const encrypted_sym_key = await symEncrypt(
         this.auth.encryptionKey,
-        Buffer.from(this.auth.symKey, "base64")
+        this.auth.symKey
       );
       const encrypted_first_name = await symEncrypt(
-        this.auth.symKey,
+        this.auth.symKey.toString("base64"),
         Buffer.from(first_name)
       );
       const encrypted_last_name = await symEncrypt(
-        this.auth.symKey,
+        this.auth.symKey.toString("base64"),
         Buffer.from(last_name)
       );
       const request: UserProfilePostRequest = {
@@ -152,7 +157,7 @@ class AccountController {
       };
       if (profile_picture != null) {
         const encrypted_profile_picture = await symEncrypt(
-          this.auth.symKey,
+          this.auth.symKey.toString("base64"),
           profile_picture
         );
         request.profile_picture = encrypted_profile_picture;
@@ -177,19 +182,19 @@ class AccountController {
       const request: UserProfilePutRequest = {};
       if (first_name != null) {
         request.first_name = await symEncrypt(
-          this.auth.symKey,
+          this.auth.symKey.toString("base64"),
           Buffer.from(first_name)
         );
       }
       if (last_name != null) {
         request.last_name = await symEncrypt(
-          this.auth.symKey,
+          this.auth.symKey.toString("base64"),
           Buffer.from(last_name)
         );
       }
       if (profile_picture != null) {
         request.profile_picture = await symEncrypt(
-          this.auth.symKey,
+          this.auth.symKey.toString("base64"),
           profile_picture
         );
       }

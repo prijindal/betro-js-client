@@ -132,7 +132,7 @@ class FollowController {
         );
         encrypted_profile_sym_key = await symEncrypt(
           derivedKey,
-          Buffer.from(this.auth.symKey, "base64")
+          this.auth.symKey
         );
       }
       const response = await this.auth.instance.post("/api/follow/", {
@@ -178,7 +178,7 @@ class FollowController {
         if (allowProfileRead) {
           encrypted_profile_sym_key = await symEncrypt(
             derivedKey,
-            Buffer.from(this.auth.symKey, "base64")
+            this.auth.symKey
           );
         }
         const response = await this.auth.instance.post("/api/follow/approve", {

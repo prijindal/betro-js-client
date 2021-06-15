@@ -48,8 +48,7 @@ class PostController {
     if (symKey == null) {
       throw Error("Decryption issues");
     }
-    const sym_key = symKey.toString("base64");
-    const parsedPost = await parsePost(resp.post, sym_key);
+    const parsedPost = await parsePost(resp.post, symKey);
     return {
       ...parsedPost,
       user,
