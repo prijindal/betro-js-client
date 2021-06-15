@@ -40,8 +40,7 @@ class FeedController {
             if (symKey == null) {
                 throw Error("Decryption issues");
             }
-            const sym_key = symKey.toString("base64");
-            return sym_key;
+            return symKey;
         };
         this.fetchUserPosts = async (username, after) => {
             const limit = 5;
@@ -73,10 +72,9 @@ class FeedController {
                 const data = await this.transformPostFeed(posts, async (post, keys) => {
                     const symKey = await betro_js_lib_1.symDecrypt(this.auth.encryptionKey, keys[post.key_id]);
                     if (symKey != null) {
-                        const sym_key = symKey.toString("base64");
-                        return sym_key;
+                        return symKey;
                     }
-                    return "";
+                    return null;
                 });
                 return {
                     data,

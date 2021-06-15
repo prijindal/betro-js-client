@@ -1,10 +1,11 @@
+/// <reference types="node" />
 import { AxiosInstance } from "axios";
 declare class AuthController {
     private host;
     encryptionKey: string;
     private token;
     privateKey: string;
-    symKey: string;
+    symKey: Buffer;
     ecdhKeys: {
         [id: string]: {
             id: string;

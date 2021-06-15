@@ -10,7 +10,6 @@ class AuthController {
         this.encryptionKey = "";
         this.token = "";
         this.privateKey = "";
-        this.symKey = "";
         // public ecdhKeys: Array<{ id: string; publicKey: string; privateKey: string }> = [];
         this.ecdhKeys = {};
         this.isAuthenticated = () => {
@@ -47,7 +46,7 @@ class AuthController {
             this.encryptionKey = "";
             this.token = "";
             this.privateKey = "";
-            this.symKey = "";
+            this.symKey = null;
         };
         this.login = async (email, password, set_cookie = false) => {
             const masterKey = await betro_js_lib_1.getMasterKey(email, password);

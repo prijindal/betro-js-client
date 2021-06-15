@@ -21,11 +21,9 @@ class KeysController {
                 this.generateEcdhKeys(ecdh_max_keys / 2 - ecdh_unclaimed_keys);
             }
             const encryptedSymKey = data.sym_key;
-            let sym_key;
             const symKey = await betro_js_lib_1.symDecrypt(this.auth.encryptionKey, encryptedSymKey);
             if (symKey != null) {
-                sym_key = symKey.toString("base64");
-                this.auth.symKey = sym_key;
+                this.auth.symKey = symKey;
                 return true;
             }
             return false;

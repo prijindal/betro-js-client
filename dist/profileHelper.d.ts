@@ -1,3 +1,4 @@
+/// <reference types="node" />
 import { PostResponse } from "./types";
 import { ProfileGrantRow } from "./UserResponses";
 export interface UserProfile {
@@ -7,7 +8,7 @@ export interface UserProfile {
     own_private_key?: string | null;
 }
 export declare const parseUserGrant: (encryptionKey: string, row: ProfileGrantRow) => Promise<UserProfile>;
-export declare const parsePost: (post: PostResponse, sym_key: string) => Promise<{
+export declare const parsePost: (post: PostResponse, sym_key: Buffer) => Promise<{
     id: string;
     text_content: string | null;
     media_content: string | null;

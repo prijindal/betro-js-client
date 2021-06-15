@@ -87,7 +87,7 @@ class FollowController {
                 let encrypted_profile_sym_key = null;
                 if (followee_public_key != null) {
                     const derivedKey = await betro_js_lib_1.deriveExchangeSymKey(followee_public_key, ownKeyPair.privateKey);
-                    encrypted_profile_sym_key = await betro_js_lib_1.symEncrypt(derivedKey, Buffer.from(this.auth.symKey, "base64"));
+                    encrypted_profile_sym_key = await betro_js_lib_1.symEncrypt(derivedKey, this.auth.symKey);
                 }
                 const response = await this.auth.instance.post("/api/follow/", {
                     followee_id: followee_id,
@@ -111,7 +111,7 @@ class FollowController {
                     const encrypted_group_sym_key = await betro_js_lib_1.symEncrypt(derivedKey, decryptedGroupSymKey);
                     let encrypted_profile_sym_key = null;
                     if (allowProfileRead) {
-                        encrypted_profile_sym_key = await betro_js_lib_1.symEncrypt(derivedKey, Buffer.from(this.auth.symKey, "base64"));
+                        encrypted_profile_sym_key = await betro_js_lib_1.symEncrypt(derivedKey, this.auth.symKey);
                     }
                     const response = await this.auth.instance.post("/api/follow/approve", {
                         follow_id: followId,

@@ -15,15 +15,14 @@ const parseUserGrant = async (encryptionKey, row) => {
                 if (sym_key_bytes == null) {
                     return response;
                 }
-                const sym_key = sym_key_bytes.toString("base64");
                 const first_name_bytes = row.first_name != null
-                    ? await betro_js_lib_1.symDecrypt(sym_key, row.first_name)
+                    ? await betro_js_lib_1.symDecryptBuffer(sym_key_bytes, row.first_name)
                     : null;
                 const last_name_bytes = row.last_name != null
-                    ? await betro_js_lib_1.symDecrypt(sym_key, row.last_name)
+                    ? await betro_js_lib_1.symDecryptBuffer(sym_key_bytes, row.last_name)
                     : null;
                 const profile_picture_bytes = row.profile_picture != null
-                    ? await betro_js_lib_1.symDecrypt(sym_key, row.profile_picture)
+                    ? await betro_js_lib_1.symDecryptBuffer(sym_key_bytes, row.profile_picture)
                     : null;
                 response.first_name = first_name_bytes === null || first_name_bytes === void 0 ? void 0 : first_name_bytes.toString("utf-8");
                 response.last_name = last_name_bytes === null || last_name_bytes === void 0 ? void 0 : last_name_bytes.toString("utf-8");
@@ -40,13 +39,13 @@ const parsePost = async (post, sym_key) => {
     let text_content = null;
     let media_content = null;
     if (post.text_content !== null) {
-        const text = await betro_js_lib_1.symDecrypt(sym_key, post.text_content);
+        const text = await betro_js_lib_1.symDecryptBuffer(sym_key, post.text_content);
         if (text != null) {
             text_content = text.toString("utf-8");
         }
     }
     if (post.media_content !== null) {
-        const media = await betro_js_lib_1.symDecrypt(sym_key, post.media_content);
+        const media = await betro_js_lib_1.symDecryptBuffer(sym_key, post.media_content);
         if (media != null) {
             media_content = bufferToImage_1.bufferToImageUrl(media);
         }

@@ -1,3 +1,4 @@
+/// <reference types="node" />
 import AuthController from "./auth";
 import { FeedPageInfo, PostResource, PostResponse, PostsFeedResponse } from "./types";
 import { PostUserResponse } from "./UserResponses";
@@ -8,7 +9,7 @@ declare class FeedController {
         [key_id: string]: string;
     }, users: {
         [user_id: string]: PostUserResponse;
-    }) => Promise<string>) => Promise<Array<PostResource>>;
+    }) => Promise<Buffer>) => Promise<Array<PostResource>>;
     private feedDefaultTransform;
     fetchUserPosts: (username: string, after: string | undefined) => Promise<{
         data: Array<PostResource>;
