@@ -24,9 +24,6 @@ jobs:
           LOGGER_LEVEL: info
           ENABLE_RATE_LIMIT: "false"
           PORT: 4000
-        links:
-          - redis
-          - postgres
       migration:
         image: betro/server:latest
         command:
@@ -39,8 +36,6 @@ jobs:
           ]
         env:
           POSTGRES_URI: postgres://betro:betro@postgres:5432/betro
-        links:
-          - postgres
       # Label used to access the service container
       redis:
         # Docker Hub image
