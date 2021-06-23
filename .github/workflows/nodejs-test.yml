@@ -12,6 +12,35 @@ jobs:
 
     # Service containers to run with `container-job`
     services:
+      server:
+        image: betro/server:latest
+        ports:
+          - "4000:4000"
+        environment:
+          POSTGRES_URI: postgres://betro:betro@postgres:5432/betro
+          REDIS_URI: redis://redis:6379
+          SECRET: 7c6626f1-2f52-4629-ae09-7d43453f3a01
+          NODE_ENV: production
+          LOGGER_LEVEL: info
+          ENABLE_RATE_LIMIT: "false"
+          PORT: 4000
+        links:
+          - redis
+          - postgres
+      migration:
+        image: betro/server:latest
+        command:
+          [
+            "./wait-for-it/wait-for-it.sh",
+            "postgres:5432",
+            "--",
+            "node",
+            "dist/scripts/migration.js",
+          ]
+        environment:
+          POSTGRES_URI: postgres://betro:betro@postgres:5432/betro
+        links:
+          - postgres
       # Label used to access the service container
       redis:
         # Docker Hub image
@@ -51,13 +80,6 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
-      - run: npm ci
-      - run: sh ./test/setup.sh
-        env:
-          POSTGRES_URI: postgres://postgres:postgres@localhost:5432/postgres
-      - run: sh ./test/startServer.sh
-        env:
-          POSTGRES_URI: postgres://postgres:postgres@localhost:5432/postgres
       - run: npm run test
       - uses: codecov/codecov-action@v1
         with:
