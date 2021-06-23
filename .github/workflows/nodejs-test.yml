@@ -16,7 +16,7 @@ jobs:
         image: betro/server:latest
         ports:
           - "4000:4000"
-        environment:
+        env:
           POSTGRES_URI: postgres://betro:betro@postgres:5432/betro
           REDIS_URI: redis://redis:6379
           SECRET: 7c6626f1-2f52-4629-ae09-7d43453f3a01
@@ -37,7 +37,7 @@ jobs:
             "node",
             "dist/scripts/migration.js",
           ]
-        environment:
+        env:
           POSTGRES_URI: postgres://betro:betro@postgres:5432/betro
         links:
           - postgres
