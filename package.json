@@ -30,7 +30,7 @@
   "homepage": "https://github.com/prijindal/betro-js-client#readme",
   "dependencies": {
     "axios": "^0.21.1",
-    "betro-js-lib": "git+https://prijindal@github.com/betro-app/betro-js-lib.git#353a4026b802815accd6bd0da95f5d00b31e63aa",
+    "betro-js-lib": "git+https://git@github.com/betro-app/betro-js-lib.git#b424f22433b4c13364f49c11a520fc2a48dc8053",
     "lodash": "^4.17.21"
   },
   "devDependencies": {
@@ -49,7 +49,7 @@
     "nodemon": "^2.0.7",
     "pre-commit": "^1.2.2",
     "prettier": "^2.3.1",
-    "puppeteer": "^10.0.0",
+    "puppeteer": "^9.1.1",
     "ts-jest": "^27.0.3",
     "ts-node": "^10.0.0",
     "typescript": "^4.3.4"
