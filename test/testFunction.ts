@@ -3,7 +3,6 @@ import { GeneratedUser, generateUsers } from "./generateUsers";
 
 export const runTests = (port: string): void => {
   let users: Array<GeneratedUser> = [];
-  const tokenMap: { [email: string]: string } = {};
   beforeAll(async () => {
     users = await generateUsers(port, 3);
   });
@@ -41,78 +40,62 @@ export const runTests = (port: string): void => {
         false
       );
       expect(isLoggedIn).toEqual(true);
-      // TODO: Delete this because of handling inside api
-      tokenMap[user.credentials.email] = user.api.auth.getToken();
+    }
+  });
+  it("Test invalid login", async () => {
+    for await (const user of users) {
+      expect(
+        user.api.auth.login(user.credentials.email, "MyPassword@123", false)
+      ).rejects.toThrow("Request failed with status code 403");
     }
   });
   it("Fetches keys", async () => {
-    for (const email in tokenMap) {
-      if (Object.prototype.hasOwnProperty.call(tokenMap, email)) {
-        const userIndex = users.findIndex((a) => a.credentials.email == email);
-        const isTokens = await users[userIndex].api.keys.fetchKeys();
-        expect(isTokens).toEqual(true);
-      }
+    for (const user of users) {
+      const isTokens = await user.api.keys.fetchKeys();
+      expect(isTokens).toEqual(true);
     }
   });
   it("Saves profile information", async () => {
-    for (const email in tokenMap) {
-      if (Object.prototype.hasOwnProperty.call(tokenMap, email)) {
-        const userIndex = users.findIndex((a) => a.credentials.email == email);
-        const user = users[userIndex];
-        const profile = await user.api.account.createProfile(
-          user.profile.first_name,
-          user.profile.last_name,
-          user.profile.profile_picture
-        );
-        expect(profile.first_name).not.toBeNull();
-        expect(profile.last_name).not.toBeNull();
-        expect(profile.profile_picture).not.toBeNull();
-      }
+    for (const user of users) {
+      const profile = await user.api.account.createProfile(
+        user.profile.first_name,
+        user.profile.last_name,
+        user.profile.profile_picture
+      );
+      expect(profile.first_name).not.toBeNull();
+      expect(profile.last_name).not.toBeNull();
+      expect(profile.profile_picture).not.toBeNull();
     }
   });
   it("Checks profile information", async () => {
-    for (const email in tokenMap) {
-      if (Object.prototype.hasOwnProperty.call(tokenMap, email)) {
-        const userIndex = users.findIndex((a) => a.credentials.email == email);
-        const user = users[userIndex];
-        const profile = await user.api.account.fetchProfile();
-        expect(profile.first_name).toEqual(user.profile.first_name);
-        expect(profile.last_name).toEqual(user.profile.last_name);
-        expect(profile.profile_picture).toEqual(user.profile.profile_picture);
-        expect(profile.sym_key).toEqual(
-          user.api.auth.symKey.toString("base64")
-        );
-      }
+    for (const user of users) {
+      const profile = await user.api.account.fetchProfile();
+      expect(profile.first_name).toEqual(user.profile.first_name);
+      expect(profile.last_name).toEqual(user.profile.last_name);
+      expect(profile.profile_picture).toEqual(user.profile.profile_picture);
+      expect(profile.sym_key).toEqual(user.api.auth.symKey.toString("base64"));
     }
   });
   it("Updates Profile information", async () => {
-    for (const email in tokenMap) {
-      if (Object.prototype.hasOwnProperty.call(tokenMap, email)) {
-        const userIndex = users.findIndex((a) => a.credentials.email == email);
-        const user = users[userIndex];
-        const profile = await user.api.account.updateProfile(
-          user.profile.first_name,
-          user.profile.last_name,
-          Buffer.from("jc3o9chn32oc3")
-        );
-        expect(profile.first_name).toBeTruthy();
-        expect(profile.last_name).toBeTruthy();
-        expect(profile.profile_picture).toBeTruthy();
-        expect(profile.sym_key).toBeTruthy();
-      }
+    for (const user of users) {
+      const profile = await user.api.account.updateProfile(
+        user.profile.first_name,
+        user.profile.last_name,
+        Buffer.from("jc3o9chn32oc3")
+      );
+      expect(profile.first_name).toBeTruthy();
+      expect(profile.last_name).toBeTruthy();
+      expect(profile.profile_picture).toBeTruthy();
+      expect(profile.sym_key).toBeTruthy();
     }
   });
   it("Check whoami", async () => {
-    for (const email in tokenMap) {
-      if (Object.prototype.hasOwnProperty.call(tokenMap, email)) {
-        const userIndex = users.findIndex((a) => a.credentials.email == email);
-        const user = users[userIndex];
-        const whoAmi = await user.api.account.whoAmi();
-        expect(whoAmi.email).toEqual(email);
-        expect(whoAmi.user_id).toBeTruthy();
-        expect(whoAmi.username).toEqual(user.credentials.username);
-        users[userIndex].id = whoAmi.user_id;
-      }
+    for (const user of users) {
+      const whoAmi = await user.api.account.whoAmi();
+      expect(whoAmi.email).toEqual(user.credentials.email);
+      expect(whoAmi.user_id).toBeTruthy();
+      expect(whoAmi.username).toEqual(user.credentials.username);
+      user.id = whoAmi.user_id;
     }
   });
   it("Enables settings", async () => {
@@ -121,75 +104,49 @@ export const runTests = (port: string): void => {
       "notification_on_followed",
       "allow_search",
     ];
-    for (const email in tokenMap) {
-      if (Object.prototype.hasOwnProperty.call(tokenMap, email)) {
-        for (const user_setting of user_settings) {
-          const userIndex = users.findIndex(
-            (a) => a.credentials.email == email
-          );
-          const user = users[userIndex];
-          const isChanged = await user.api.settings.changeUserSettings(
-            user_setting,
-            true
-          );
-          expect(isChanged.enabled).toEqual(true);
-          expect(isChanged.type).toEqual(user_setting);
-          expect(isChanged.id).toBeTruthy();
-        }
+    for (const user of users) {
+      for (const user_setting of user_settings) {
+        const isChanged = await user.api.settings.changeUserSettings(
+          user_setting,
+          true
+        );
+        expect(isChanged.enabled).toEqual(true);
+        expect(isChanged.type).toEqual(user_setting);
+        expect(isChanged.id).toBeTruthy();
       }
     }
   });
   it("Checks settings", async () => {
-    for (const email in tokenMap) {
-      if (Object.prototype.hasOwnProperty.call(tokenMap, email)) {
-        const userIndex = users.findIndex((a) => a.credentials.email == email);
-        const user = users[userIndex];
-        const settings = await user.api.settings.fetchUserSettings();
-        expect(settings.length).toEqual(3);
-        expect(settings[0].type).toEqual("notification_on_approved");
-        expect(settings[0].enabled).toEqual(true);
-      }
+    for (const user of users) {
+      const settings = await user.api.settings.fetchUserSettings();
+      expect(settings.length).toEqual(3);
+      expect(settings[0].type).toEqual("notification_on_approved");
+      expect(settings[0].enabled).toEqual(true);
     }
   });
   it("Fetches user groups", async () => {
-    for (const email in tokenMap) {
-      if (Object.prototype.hasOwnProperty.call(tokenMap, email)) {
-        const userIndex = users.findIndex((a) => a.credentials.email == email);
-        const user = users[userIndex];
-        const groups = await user.api.group.fetchGroups();
-        expect(groups.length).toEqual(0);
-      }
+    for (const user of users) {
+      const groups = await user.api.group.fetchGroups();
+      expect(groups.length).toEqual(0);
     }
   });
   it("Creates user group", async () => {
-    for (const email in tokenMap) {
-      if (Object.prototype.hasOwnProperty.call(tokenMap, email)) {
-        const userIndex = users.findIndex((a) => a.credentials.email == email);
-        const user = users[userIndex];
-        const group = await user.api.group.createGroup("Followers", true);
-        expect(group.id).toBeTruthy();
-      }
+    for (const user of users) {
+      const group = await user.api.group.createGroup("Followers", true);
+      expect(group.id).toBeTruthy();
     }
   });
   it("Verifies groups are created", async () => {
-    for (const email in tokenMap) {
-      if (Object.prototype.hasOwnProperty.call(tokenMap, email)) {
-        const userIndex = users.findIndex((a) => a.credentials.email == email);
-        const user = users[userIndex];
-        const groups = await user.api.group.fetchGroups();
-        expect(groups.length).toEqual(1);
-        users[userIndex].groups = groups;
-      }
+    for (const user of users) {
+      const groups = await user.api.group.fetchGroups();
+      expect(groups.length).toEqual(1);
+      user.groups = groups;
     }
   });
   it("Check Ecdh Keys", async () => {
-    for (const email in tokenMap) {
-      if (Object.prototype.hasOwnProperty.call(tokenMap, email)) {
-        const userIndex = users.findIndex((a) => a.credentials.email == email);
-        const user = users[userIndex];
-        await user.api.keys.getExistingEcdhKeys();
-        expect(Object.keys(user.api.auth.ecdhKeys).length).toEqual(25);
-      }
+    for (const user of users) {
+      await user.api.keys.getExistingEcdhKeys();
+      expect(Object.keys(user.api.auth.ecdhKeys).length).toEqual(25);
     }
   });
   it("Follows user", async () => {
@@ -363,15 +320,9 @@ export const runTests = (port: string): void => {
     expect(likePosts.likes).toEqual(0);
   });
   it("Deletes group", async () => {
-    for (const email in tokenMap) {
-      if (Object.prototype.hasOwnProperty.call(tokenMap, email)) {
-        const userIndex = users.findIndex((a) => a.credentials.email == email);
-        const user = users[userIndex];
-        const deletedGroup = await user.api.group.deleteGroup(
-          user.groups[0].id
-        );
-        expect(deletedGroup.deleted).toEqual(true);
-      }
+    for (const user of users) {
+      const deletedGroup = await user.api.group.deleteGroup(user.groups[0].id);
+      expect(deletedGroup.deleted).toEqual(true);
     }
   });
   describe("Conversation between people without any profile grants", () => {

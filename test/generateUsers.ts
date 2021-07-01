@@ -13,9 +13,6 @@ export interface GeneratedUser {
     profile_picture: Buffer;
   };
   password: string;
-  keys: {
-    // groupSymKey?: string;
-  };
   groups?: Array<GroupResponse>;
   id?: string;
   api: BetroApi;
@@ -57,7 +54,6 @@ export const generateUsers = async (
         profile_picture: Buffer.from("wxwx"),
       },
       password,
-      keys: {},
       api: new BetroApi(`http://localhost:${port}`),
     });
   }
