@@ -39,6 +39,10 @@ class AuthController {
     return true;
   };
 
+  getHost = ():string => {
+    return this.host;
+  }
+
   getToken = (): string => {
     return this.token;
   };

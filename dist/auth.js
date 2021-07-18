@@ -20,6 +20,9 @@ class AuthController {
             }
             return true;
         };
+        this.getHost = () => {
+            return this.host;
+        };
         this.getToken = () => {
             return this.token;
         };

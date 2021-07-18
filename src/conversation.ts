@@ -10,6 +10,7 @@ class ConversationController {
   constructor(auth: AuthController) {
     this.auth = auth;
   }
+  ws: WebSocket | null;
 
   fetchConversations = async (
     after: string | undefined
@@ -135,6 +136,50 @@ class ConversationController {
       after: response.data.after,
       data: data,
     };
+  };
+
+  parseMessage = async (
+    conversation: ConversationResponseBackend,
+    message: string
+  ): Promise<string | null> => {
+    if (
+      conversation != null &&
+      conversation.public_key != null &&
+      conversation.own_private_key != null
+    ) {
+      const derivedKey = await deriveExchangeSymKey(
+        conversation.public_key,
+        conversation.own_private_key
+      );
+      const decryptedMessage = await symDecrypt(derivedKey, message);
+      return decryptedMessage.toString("utf-8");
+    }
+    return null;
+  };
+
+  listenMessages = (messageEventListener: (m: MessageEvent) => void): void => {
+    if (this.ws == null) {
+      const hostArr = this.auth.getHost().split("://");
+      const host = hostArr[1];
+      const protocol = hostArr[0] == "http" ? "ws" : "wss";
+      const s = new WebSocket(`${protocol}://${host}/messages`);
+      this.ws = s;
+      this.ws.addEventListener("error", (m) => {
+        console.log("error");
+      });
+      this.ws.addEventListener("close", () => {
+        console.log("websocket connection closed");
+        this.ws = null;
+      });
+      this.ws.addEventListener("open", (m) => {
+        const payload = { action: "login", token: this.auth.getToken() };
+        if (this.ws != null) {
+          this.ws.send(JSON.stringify(payload));
+        }
+        console.log("websocket connection open");
+      });
+      this.ws.addEventListener("message", messageEventListener);
+    }
   };
 }
 

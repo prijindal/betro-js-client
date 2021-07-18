@@ -17,6 +17,7 @@ declare class AuthController {
     instance: AxiosInstance;
     constructor(host: string);
     isAuthenticated: () => boolean;
+    getHost: () => string;
     getToken: () => string;
     storeLocal: () => void;
     loadFromLocal: () => boolean;
