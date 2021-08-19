@@ -12,6 +12,7 @@
     "moduleResolution": "Node",
     "sourceMap": true,
     "outDir": "dist",
+    "newLine": "lf",
     "baseUrl": ".",
     "types": [
       "node"
