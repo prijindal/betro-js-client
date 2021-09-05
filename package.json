@@ -29,7 +29,7 @@
   },
   "homepage": "https://github.com/prijindal/betro-js-client#readme",
   "dependencies": {
-    "axios": "^0.21.1",
+    "axios": "^0.21.3",
     "betro-js-lib": "git+https://git@github.com/betro-app/betro-js-lib.git#226dd1c3f9ac46018db0b078b29881971e76fb4f",
     "lodash": "^4.17.21"
   },
