@@ -29,7 +29,7 @@
   },
   "homepage": "https://github.com/prijindal/betro-js-client#readme",
   "dependencies": {
-    "axios": "^0.21.1",
+    "axios": "^0.21.4",
     "betro-js-lib": "git+https://git@github.com/betro-app/betro-js-lib.git#226dd1c3f9ac46018db0b078b29881971e76fb4f",
     "lodash": "^4.17.21"
   },
@@ -37,14 +37,14 @@
     "@types/faker": "^5.5.8",
     "@types/jest": "^27.0.1",
     "@types/lodash": "^4.14.172",
-    "@types/node": "^16.7.1",
-    "@typescript-eslint/eslint-plugin": "^4.29.3",
-    "@typescript-eslint/parser": "^4.29.3",
+    "@types/node": "^16.7.13",
+    "@typescript-eslint/eslint-plugin": "^4.31.0",
+    "@typescript-eslint/parser": "^4.31.0",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
     "faker": "^5.5.3",
-    "husky": "^7.0.1",
-    "jest": "^27.0.6",
+    "husky": "^7.0.2",
+    "jest": "^27.1.1",
     "jest-puppeteer": "^5.0.4",
     "nodemon": "^2.0.12",
     "pre-commit": "^1.2.2",
@@ -52,6 +52,6 @@
     "puppeteer": "^9.1.1",
     "ts-jest": "^27.0.5",
     "ts-node": "^10.2.1",
-    "typescript": "^4.3.5"
+    "typescript": "^4.4.2"
   }
 }
