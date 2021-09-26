@@ -45,7 +45,7 @@
     "faker": "^5.5.3",
     "husky": "^7.0.2",
     "jest": "^27.1.1",
-    "jest-puppeteer": "^5.0.4",
+    "jest-puppeteer": "^6.0.0",
     "nodemon": "^2.0.12",
     "pre-commit": "^1.2.2",
     "prettier": "^2.3.2",
