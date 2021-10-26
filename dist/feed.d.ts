@@ -1,4 +1,3 @@
-/// <reference types="node" />
 import AuthController from "./auth";
 import { FeedPageInfo, PostResource, PostResponse, PostsFeedResponse } from "./types";
 import { PostUserResponse } from "./UserResponses";

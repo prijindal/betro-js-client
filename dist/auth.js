@@ -15,7 +15,7 @@ class AuthController {
         this.isAuthenticated = () => {
             if (this.encryptionKey.length === 0 ||
                 ((this.token == null || this.token.length === 0) &&
-                    this.instance.defaults.headers["cookie"] === null)) {
+                    this.instance.defaults.headers.get["cookie"] === null)) {
                 return false;
             }
             return true;
@@ -52,13 +52,13 @@ class AuthController {
             this.symKey = null;
         };
         this.login = async (email, password, set_cookie = false) => {
-            const masterKey = await betro_js_lib_1.getMasterKey(email, password);
-            const masterHash = await betro_js_lib_1.getMasterHash(masterKey, password);
+            const masterKey = await (0, betro_js_lib_1.getMasterKey)(email, password);
+            const masterHash = await (0, betro_js_lib_1.getMasterHash)(masterKey, password);
             const response = await this.instance.post(`/api/login?set_cookie=${set_cookie}`, {
                 email,
                 master_hash: masterHash,
             });
-            this.encryptionKey = await betro_js_lib_1.getEncryptionKey(masterKey);
+            this.encryptionKey = await (0, betro_js_lib_1.getEncryptionKey)(masterKey);
             const token = response.data.token;
             if (token != null) {
                 this.token = token;
@@ -85,11 +85,11 @@ class AuthController {
             }
         };
         this.register = async (username, email, password) => {
-            const masterKey = await betro_js_lib_1.getMasterKey(email, password);
-            const masterHash = await betro_js_lib_1.getMasterHash(masterKey, password);
-            const encryptionKey = await betro_js_lib_1.getEncryptionKey(masterKey);
-            const symKey = await betro_js_lib_1.generateSymKey();
-            const encryptedSymKey = await betro_js_lib_1.symEncrypt(encryptionKey, Buffer.from(symKey, "base64"));
+            const masterKey = await (0, betro_js_lib_1.getMasterKey)(email, password);
+            const masterHash = await (0, betro_js_lib_1.getMasterHash)(masterKey, password);
+            const encryptionKey = await (0, betro_js_lib_1.getEncryptionKey)(masterKey);
+            const symKey = await (0, betro_js_lib_1.generateSymKey)();
+            const encryptedSymKey = await (0, betro_js_lib_1.symEncrypt)(encryptionKey, Buffer.from(symKey, "base64"));
             const response = await this.instance.post("/api/register", {
                 username,
                 email,

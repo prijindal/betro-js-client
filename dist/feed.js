@@ -12,13 +12,13 @@ class FeedController {
                     const user = feed.users[user_id];
                     users[user_id] = {
                         username: user.username,
-                        ...(await profileHelper_1.parseUserGrant(this.auth.encryptionKey, user)),
+                        ...(await (0, profileHelper_1.parseUserGrant)(this.auth.encryptionKey, user)),
                     };
                 }
             }
             for (const post of feed.posts) {
                 const sym_key = await postToSymKey(post, feed.keys, feed.users);
-                const parsedPost = await profileHelper_1.parsePost(post, sym_key);
+                const parsedPost = await (0, profileHelper_1.parsePost)(post, sym_key);
                 posts.push({
                     ...parsedPost,
                     user: users[post.user_id],
@@ -31,12 +31,12 @@ class FeedController {
             if (user.own_private_key == null || user.public_key == null) {
                 throw Error("Decryption issues");
             }
-            const privateKey = await betro_js_lib_1.symDecrypt(this.auth.encryptionKey, user.own_private_key);
+            const privateKey = await (0, betro_js_lib_1.symDecrypt)(this.auth.encryptionKey, user.own_private_key);
             if (privateKey == null) {
                 throw Error("Decryption issues");
             }
-            const derivedKey = await betro_js_lib_1.deriveExchangeSymKey(user.public_key, privateKey.toString("base64"));
-            const symKey = await betro_js_lib_1.symDecrypt(derivedKey, keys[post.key_id]);
+            const derivedKey = await (0, betro_js_lib_1.deriveExchangeSymKey)(user.public_key, privateKey.toString("base64"));
+            const symKey = await (0, betro_js_lib_1.symDecrypt)(derivedKey, keys[post.key_id]);
             if (symKey == null) {
                 throw Error("Decryption issues");
             }
@@ -70,7 +70,7 @@ class FeedController {
                 const response = await this.auth.instance.get(`/api/account/posts?limit=${limit}&after=${after}`);
                 const posts = response.data;
                 const data = await this.transformPostFeed(posts, async (post, keys) => {
-                    const symKey = await betro_js_lib_1.symDecrypt(this.auth.encryptionKey, keys[post.key_id]);
+                    const symKey = await (0, betro_js_lib_1.symDecrypt)(this.auth.encryptionKey, keys[post.key_id]);
                     if (symKey != null) {
                         return symKey;
                     }

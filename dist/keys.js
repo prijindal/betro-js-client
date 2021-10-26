@@ -21,7 +21,7 @@ class KeysController {
                 this.generateEcdhKeys(ecdh_max_keys / 2 - ecdh_unclaimed_keys);
             }
             const encryptedSymKey = data.sym_key;
-            const symKey = await betro_js_lib_1.symDecrypt(this.auth.encryptionKey, encryptedSymKey);
+            const symKey = await (0, betro_js_lib_1.symDecrypt)(this.auth.encryptionKey, encryptedSymKey);
             if (symKey != null) {
                 this.auth.symKey = symKey;
                 return true;
@@ -32,13 +32,13 @@ class KeysController {
             if (n <= 0) {
                 return;
             }
-            const keyPairs = await Promise.all(times_1.default(n).map(() => betro_js_lib_1.generateExchangePair()));
+            const keyPairs = await Promise.all((0, times_1.default)(n).map(() => (0, betro_js_lib_1.generateExchangePair)()));
             const keyPairMappings = {};
             for (const keyPair of keyPairs) {
                 keyPairMappings[keyPair.publicKey] = keyPair.privateKey;
             }
             const encryptedKeyPairs = await Promise.all(keyPairs.map(async ({ publicKey, privateKey }) => {
-                const privKey = await betro_js_lib_1.symEncrypt(this.auth.encryptionKey, Buffer.from(privateKey, "base64"));
+                const privKey = await (0, betro_js_lib_1.symEncrypt)(this.auth.encryptionKey, Buffer.from(privateKey, "base64"));
                 return {
                     public_key: publicKey,
                     private_key: privKey,
@@ -64,7 +64,7 @@ class KeysController {
             const encryptedKeyPairs = response.data;
             for (const encryptedKeyPair of encryptedKeyPairs) {
                 const { id, public_key, private_key, claimed } = encryptedKeyPair;
-                const privateKey = await betro_js_lib_1.symDecrypt(this.auth.encryptionKey, private_key);
+                const privateKey = await (0, betro_js_lib_1.symDecrypt)(this.auth.encryptionKey, private_key);
                 if (privateKey != null) {
                     this.auth.ecdhKeys[id] = {
                         id,

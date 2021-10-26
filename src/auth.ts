@@ -32,16 +32,16 @@ class AuthController {
     if (
       this.encryptionKey.length === 0 ||
       ((this.token == null || this.token.length === 0) &&
-        this.instance.defaults.headers["cookie"] === null)
+        this.instance.defaults.headers.get["cookie"] === null)
     ) {
       return false;
     }
     return true;
   };
 
-  getHost = ():string => {
+  getHost = (): string => {
     return this.host;
-  }
+  };
 
   getToken = (): string => {
     return this.token;

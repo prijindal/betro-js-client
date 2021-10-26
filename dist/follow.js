@@ -12,7 +12,7 @@ class FollowController {
                 const data = [];
                 for (const res of resp.data) {
                     let userResponse = {};
-                    userResponse = await profileHelper_1.parseUserGrant(this.auth.encryptionKey, res);
+                    userResponse = await (0, profileHelper_1.parseUserGrant)(this.auth.encryptionKey, res);
                     data.push({
                         id: res.id,
                         follower_id: res.follower_id,
@@ -38,7 +38,7 @@ class FollowController {
                 const resp = response.data;
                 const data = [];
                 for (const res of resp.data) {
-                    const userResponse = await profileHelper_1.parseUserGrant(this.auth.encryptionKey, res);
+                    const userResponse = await (0, profileHelper_1.parseUserGrant)(this.auth.encryptionKey, res);
                     data.push({
                         follow_id: res.follow_id,
                         group_id: res.group_id,
@@ -71,7 +71,7 @@ class FollowController {
                         user_id: res.user_id,
                         username: res.username,
                     };
-                    const userResponse = await profileHelper_1.parseUserGrant(this.auth.encryptionKey, res);
+                    const userResponse = await (0, profileHelper_1.parseUserGrant)(this.auth.encryptionKey, res);
                     row = { ...row, ...userResponse };
                     data.push(row);
                 }
@@ -86,8 +86,8 @@ class FollowController {
                 const ownKeyPair = this.auth.ecdhKeys[Object.keys(this.auth.ecdhKeys)[0]];
                 let encrypted_profile_sym_key = null;
                 if (followee_public_key != null) {
-                    const derivedKey = await betro_js_lib_1.deriveExchangeSymKey(followee_public_key, ownKeyPair.privateKey);
-                    encrypted_profile_sym_key = await betro_js_lib_1.symEncrypt(derivedKey, this.auth.symKey);
+                    const derivedKey = await (0, betro_js_lib_1.deriveExchangeSymKey)(followee_public_key, ownKeyPair.privateKey);
+                    encrypted_profile_sym_key = await (0, betro_js_lib_1.symEncrypt)(derivedKey, this.auth.symKey);
                 }
                 const response = await this.auth.instance.post("/api/follow/", {
                     followee_id: followee_id,
@@ -104,14 +104,14 @@ class FollowController {
             }
         };
         this.approveUser = async (followId, follower_public_key, group_id, encrypted_by_user_group_sym_key, own_key_id, private_key, allowProfileRead = false) => {
-            const decryptedGroupSymKey = await betro_js_lib_1.symDecrypt(this.auth.encryptionKey, encrypted_by_user_group_sym_key);
-            const derivedKey = await betro_js_lib_1.deriveExchangeSymKey(follower_public_key, private_key);
+            const decryptedGroupSymKey = await (0, betro_js_lib_1.symDecrypt)(this.auth.encryptionKey, encrypted_by_user_group_sym_key);
+            const derivedKey = await (0, betro_js_lib_1.deriveExchangeSymKey)(follower_public_key, private_key);
             try {
                 if (decryptedGroupSymKey != null) {
-                    const encrypted_group_sym_key = await betro_js_lib_1.symEncrypt(derivedKey, decryptedGroupSymKey);
+                    const encrypted_group_sym_key = await (0, betro_js_lib_1.symEncrypt)(derivedKey, decryptedGroupSymKey);
                     let encrypted_profile_sym_key = null;
                     if (allowProfileRead) {
-                        encrypted_profile_sym_key = await betro_js_lib_1.symEncrypt(derivedKey, this.auth.symKey);
+                        encrypted_profile_sym_key = await (0, betro_js_lib_1.symEncrypt)(derivedKey, this.auth.symKey);
                     }
                     const response = await this.auth.instance.post("/api/follow/approve", {
                         follow_id: followId,
@@ -137,7 +137,7 @@ class FollowController {
             try {
                 const response = await this.auth.instance.get(`/api/user/${username}`);
                 const data = response.data;
-                const userResponse = await profileHelper_1.parseUserGrant(this.auth.encryptionKey, data);
+                const userResponse = await (0, profileHelper_1.parseUserGrant)(this.auth.encryptionKey, data);
                 return {
                     id: data.id,
                     username: data.username,
@@ -162,7 +162,7 @@ class FollowController {
                         is_following: res.is_following,
                         is_following_approved: res.is_following_approved,
                     };
-                    const userResponse = await profileHelper_1.parseUserGrant(this.auth.encryptionKey, res);
+                    const userResponse = await (0, profileHelper_1.parseUserGrant)(this.auth.encryptionKey, res);
                     row = { ...row, ...userResponse, public_key: res.public_key };
                     data.push(row);
                 }

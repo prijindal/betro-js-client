@@ -12,21 +12,21 @@ class PostController {
             };
             user = {
                 username: resp.user.username,
-                ...(await profileHelper_1.parseUserGrant(this.auth.encryptionKey, resp.user)),
+                ...(await (0, profileHelper_1.parseUserGrant)(this.auth.encryptionKey, resp.user)),
             };
             if (resp.user.own_private_key == null || resp.user.public_key == null) {
                 throw Error("Decryption issues");
             }
-            const privateKey = await betro_js_lib_1.symDecrypt(this.auth.encryptionKey, resp.user.own_private_key);
+            const privateKey = await (0, betro_js_lib_1.symDecrypt)(this.auth.encryptionKey, resp.user.own_private_key);
             if (privateKey == null) {
                 throw Error("Decryption issues");
             }
-            const derivedKey = await betro_js_lib_1.deriveExchangeSymKey(resp.user.public_key, privateKey.toString("base64"));
-            const symKey = await betro_js_lib_1.symDecrypt(derivedKey, resp.post.key);
+            const derivedKey = await (0, betro_js_lib_1.deriveExchangeSymKey)(resp.user.public_key, privateKey.toString("base64"));
+            const symKey = await (0, betro_js_lib_1.symDecrypt)(derivedKey, resp.post.key);
             if (symKey == null) {
                 throw Error("Decryption issues");
             }
-            const parsedPost = await profileHelper_1.parsePost(resp.post, symKey);
+            const parsedPost = await (0, profileHelper_1.parsePost)(resp.post, symKey);
             return {
                 ...parsedPost,
                 user,
@@ -34,14 +34,14 @@ class PostController {
         };
         this.createPost = async (group_id, encrypted_sym_key, text, media_encoding, media) => {
             try {
-                const sym_key = await betro_js_lib_1.symDecrypt(this.auth.encryptionKey, encrypted_sym_key);
+                const sym_key = await (0, betro_js_lib_1.symDecrypt)(this.auth.encryptionKey, encrypted_sym_key);
                 let encryptedText = null;
                 if (text != null && sym_key != null) {
-                    encryptedText = await betro_js_lib_1.symEncrypt(sym_key.toString("base64"), Buffer.from(text));
+                    encryptedText = await (0, betro_js_lib_1.symEncrypt)(sym_key.toString("base64"), Buffer.from(text));
                 }
                 let encryptedMedia = null;
                 if (media != null && sym_key != null) {
-                    encryptedMedia = await betro_js_lib_1.symEncrypt(sym_key.toString("base64"), media);
+                    encryptedMedia = await (0, betro_js_lib_1.symEncrypt)(sym_key.toString("base64"), media);
                 }
                 const response = await this.auth.instance.post("/api/post", {
                     group_id: group_id,

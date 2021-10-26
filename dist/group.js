@@ -24,8 +24,8 @@ class GroupController {
             }
         };
         this.createGroup = async (name, is_default) => {
-            const sym_key = await betro_js_lib_1.generateSymKey();
-            const encryptedSymKey = await betro_js_lib_1.symEncrypt(this.auth.encryptionKey, Buffer.from(sym_key, "base64"));
+            const sym_key = await (0, betro_js_lib_1.generateSymKey)();
+            const encryptedSymKey = await (0, betro_js_lib_1.symEncrypt)(this.auth.encryptionKey, Buffer.from(sym_key, "base64"));
             try {
                 const response = await this.auth.instance.post("/api/groups", {
                     name: name,

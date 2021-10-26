@@ -1,4 +1,3 @@
-/// <reference types="node" />
 import AuthController from "./auth";
 import { PostResource, LikeResponse, PostResponse } from "./types";
 declare class PostController {
