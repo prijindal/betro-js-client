@@ -359,6 +359,7 @@ export const runTests = (port: string): void => {
       const conversations = await user1.api.conversation.fetchConversations(
         undefined
       );
+      expect(conversations.total).toEqual(1);
       const conversation = await user1.api.conversation.fetchConversation(
         conversations.data[0].id
       );
@@ -472,7 +473,7 @@ export const runTests = (port: string): void => {
     expect(countsUser1.settings).toEqual(3);
     expect(countsUser1.groups).toEqual(0);
     expect(countsUser1.followers).toEqual(0);
-    expect(countsUser1.followees).toEqual(0);
+    expect(countsUser1.followees).toEqual(1);
     expect(countsUser1.approvals).toEqual(0);
     expect(countsUser1.posts).toEqual(0);
     const user2 = users[1];
@@ -480,9 +481,9 @@ export const runTests = (port: string): void => {
     expect(countsUser2.notifications).toEqual(1);
     expect(countsUser2.settings).toEqual(3);
     expect(countsUser2.groups).toEqual(0);
-    expect(countsUser2.followers).toEqual(0);
+    expect(countsUser2.followers).toEqual(1);
     expect(countsUser2.followees).toEqual(0);
     expect(countsUser2.approvals).toEqual(0);
-    expect(countsUser2.posts).toEqual(0);
+    expect(countsUser2.posts).toEqual(1);
   });
 };
