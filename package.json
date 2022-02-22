@@ -1,5 +1,5 @@
 {
-  "name": "betro-js-client",
+  "name": "@betro/client",
   "version": "0.0.1",
   "description": "Client for betro api",
   "main": "dist/index.js",
@@ -29,7 +29,7 @@
   "homepage": "https://github.com/prijindal/betro-js-client#readme",
   "dependencies": {
     "axios": "^0.25.0",
-    "betro-js-lib": "1.0.0",
+    "@betro/lib": "1.0.0",
     "lodash": "^4.17.21"
   },
   "devDependencies": {
