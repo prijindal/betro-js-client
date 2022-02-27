@@ -1,28 +1,28 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.parsePost = exports.parseUserGrant = void 0;
-const betro_js_lib_1 = require("betro-js-lib");
+const lib_1 = require("@betro/lib");
 const bufferToImage_1 = require("./bufferToImage");
 const parseUserGrant = async (encryptionKey, row) => {
     const response = {};
     if (row.own_private_key != null) {
-        const privateKey = await (0, betro_js_lib_1.symDecrypt)(encryptionKey, row.own_private_key);
+        const privateKey = await (0, lib_1.symDecrypt)(encryptionKey, row.own_private_key);
         if (privateKey != null) {
             response.own_private_key = privateKey.toString("base64");
             if (row.public_key != null && row.encrypted_profile_sym_key != null) {
-                const derivedKey = await (0, betro_js_lib_1.deriveExchangeSymKey)(row.public_key, response.own_private_key);
-                const sym_key_bytes = await (0, betro_js_lib_1.symDecrypt)(derivedKey, row.encrypted_profile_sym_key);
+                const derivedKey = await (0, lib_1.deriveExchangeSymKey)(row.public_key, response.own_private_key);
+                const sym_key_bytes = await (0, lib_1.symDecrypt)(derivedKey, row.encrypted_profile_sym_key);
                 if (sym_key_bytes == null) {
                     return response;
                 }
                 const first_name_bytes = row.first_name != null
-                    ? await (0, betro_js_lib_1.symDecryptBuffer)(sym_key_bytes, row.first_name)
+                    ? await (0, lib_1.symDecryptBuffer)(sym_key_bytes, row.first_name)
                     : null;
                 const last_name_bytes = row.last_name != null
-                    ? await (0, betro_js_lib_1.symDecryptBuffer)(sym_key_bytes, row.last_name)
+                    ? await (0, lib_1.symDecryptBuffer)(sym_key_bytes, row.last_name)
                     : null;
                 const profile_picture_bytes = row.profile_picture != null
-                    ? await (0, betro_js_lib_1.symDecryptBuffer)(sym_key_bytes, row.profile_picture)
+                    ? await (0, lib_1.symDecryptBuffer)(sym_key_bytes, row.profile_picture)
                     : null;
                 response.first_name = first_name_bytes === null || first_name_bytes === void 0 ? void 0 : first_name_bytes.toString("utf-8");
                 response.last_name = last_name_bytes === null || last_name_bytes === void 0 ? void 0 : last_name_bytes.toString("utf-8");
@@ -39,13 +39,13 @@ const parsePost = async (post, sym_key) => {
     let text_content = null;
     let media_content = null;
     if (post.text_content !== null) {
-        const text = await (0, betro_js_lib_1.symDecryptBuffer)(sym_key, post.text_content);
+        const text = await (0, lib_1.symDecryptBuffer)(sym_key, post.text_content);
         if (text != null) {
             text_content = text.toString("utf-8");
         }
     }
     if (post.media_content !== null) {
-        const media = await (0, betro_js_lib_1.symDecryptBuffer)(sym_key, post.media_content);
+        const media = await (0, lib_1.symDecryptBuffer)(sym_key, post.media_content);
         if (media != null) {
             media_content = (0, bufferToImage_1.bufferToImageUrl)(media);
         }

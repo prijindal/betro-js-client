@@ -1,5 +1,5 @@
 import { AxiosResponse } from "axios";
-import { symDecrypt, symDecryptBuffer, symEncrypt } from "betro-js-lib";
+import { symDecrypt, symDecryptBuffer, symEncrypt } from "@betro/lib";
 import AuthController from "./auth";
 import {
   CountResponse,

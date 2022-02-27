@@ -1,6 +1,6 @@
 {
   "name": "@betro/client",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Client for betro api",
   "main": "dist/index.js",
   "scripts": {

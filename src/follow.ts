@@ -1,4 +1,4 @@
-import { symDecrypt, deriveExchangeSymKey, symEncrypt } from "betro-js-lib";
+import { symDecrypt, deriveExchangeSymKey, symEncrypt } from "@betro/lib";
 import { parseUserGrant, UserProfile } from "./profileHelper";
 
 import AuthController from "./auth";

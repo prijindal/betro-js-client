@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const betro_js_lib_1 = require("betro-js-lib");
+const lib_1 = require("@betro/lib");
 const profileHelper_1 = require("./profileHelper");
 class ConversationController {
     constructor(auth) {
@@ -63,8 +63,8 @@ class ConversationController {
             }
         };
         this.sendMessage = async (conversation_id, private_key, public_key, text_content) => {
-            const derivedKey = await (0, betro_js_lib_1.deriveExchangeSymKey)(public_key, private_key);
-            const encryptedMessage = await (0, betro_js_lib_1.symEncrypt)(derivedKey, Buffer.from(text_content, "utf-8"));
+            const derivedKey = await (0, lib_1.deriveExchangeSymKey)(public_key, private_key);
+            const encryptedMessage = await (0, lib_1.symEncrypt)(derivedKey, Buffer.from(text_content, "utf-8"));
             const response = await this.auth.instance.post(`/api/messages/${conversation_id}/messages`, {
                 message: encryptedMessage,
             });
@@ -75,11 +75,11 @@ class ConversationController {
             if (after == null) {
                 after = Buffer.from(new Date().toISOString(), "utf-8").toString("base64");
             }
-            const derivedKey = await (0, betro_js_lib_1.deriveExchangeSymKey)(public_key, private_key);
+            const derivedKey = await (0, lib_1.deriveExchangeSymKey)(public_key, private_key);
             const response = await this.auth.instance.get(`/api/messages/${conversation_id}/messages?limit=${limit}&after=${after}`);
             const data = [];
             for (const row of response.data.data) {
-                const message = await (0, betro_js_lib_1.symDecrypt)(derivedKey, row.message);
+                const message = await (0, lib_1.symDecrypt)(derivedKey, row.message);
                 data.push({
                     ...row,
                     message: message.toString("utf-8"),
@@ -97,8 +97,8 @@ class ConversationController {
             if (conversation != null &&
                 conversation.public_key != null &&
                 conversation.own_private_key != null) {
-                const derivedKey = await (0, betro_js_lib_1.deriveExchangeSymKey)(conversation.public_key, conversation.own_private_key);
-                const decryptedMessage = await (0, betro_js_lib_1.symDecrypt)(derivedKey, message);
+                const derivedKey = await (0, lib_1.deriveExchangeSymKey)(conversation.public_key, conversation.own_private_key);
+                const decryptedMessage = await (0, lib_1.symDecrypt)(derivedKey, message);
                 return decryptedMessage.toString("utf-8");
             }
             return null;

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const betro_js_lib_1 = require("betro-js-lib");
+const lib_1 = require("@betro/lib");
 const profileHelper_1 = require("./profileHelper");
 class FollowController {
     constructor(auth) {
@@ -86,8 +86,8 @@ class FollowController {
                 const ownKeyPair = this.auth.ecdhKeys[Object.keys(this.auth.ecdhKeys)[0]];
                 let encrypted_profile_sym_key = null;
                 if (followee_public_key != null) {
-                    const derivedKey = await (0, betro_js_lib_1.deriveExchangeSymKey)(followee_public_key, ownKeyPair.privateKey);
-                    encrypted_profile_sym_key = await (0, betro_js_lib_1.symEncrypt)(derivedKey, this.auth.symKey);
+                    const derivedKey = await (0, lib_1.deriveExchangeSymKey)(followee_public_key, ownKeyPair.privateKey);
+                    encrypted_profile_sym_key = await (0, lib_1.symEncrypt)(derivedKey, this.auth.symKey);
                 }
                 const response = await this.auth.instance.post("/api/follow/", {
                     followee_id: followee_id,
@@ -104,14 +104,14 @@ class FollowController {
             }
         };
         this.approveUser = async (followId, follower_public_key, group_id, encrypted_by_user_group_sym_key, own_key_id, private_key, allowProfileRead = false) => {
-            const decryptedGroupSymKey = await (0, betro_js_lib_1.symDecrypt)(this.auth.encryptionKey, encrypted_by_user_group_sym_key);
-            const derivedKey = await (0, betro_js_lib_1.deriveExchangeSymKey)(follower_public_key, private_key);
+            const decryptedGroupSymKey = await (0, lib_1.symDecrypt)(this.auth.encryptionKey, encrypted_by_user_group_sym_key);
+            const derivedKey = await (0, lib_1.deriveExchangeSymKey)(follower_public_key, private_key);
             try {
                 if (decryptedGroupSymKey != null) {
-                    const encrypted_group_sym_key = await (0, betro_js_lib_1.symEncrypt)(derivedKey, decryptedGroupSymKey);
+                    const encrypted_group_sym_key = await (0, lib_1.symEncrypt)(derivedKey, decryptedGroupSymKey);
                     let encrypted_profile_sym_key = null;
                     if (allowProfileRead) {
-                        encrypted_profile_sym_key = await (0, betro_js_lib_1.symEncrypt)(derivedKey, this.auth.symKey);
+                        encrypted_profile_sym_key = await (0, lib_1.symEncrypt)(derivedKey, this.auth.symKey);
                     }
                     const response = await this.auth.instance.post("/api/follow/approve", {
                         follow_id: followId,

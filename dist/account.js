@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const betro_js_lib_1 = require("betro-js-lib");
+const lib_1 = require("@betro/lib");
 class AccountController {
     constructor(auth) {
         this.fetchProfilePicture = async () => {
@@ -9,7 +9,7 @@ class AccountController {
             try {
                 const response = await this.auth.instance.get("/api/account/profile_picture");
                 const data = response.data;
-                const profile_picture = await (0, betro_js_lib_1.symDecryptBuffer)(this.auth.symKey, data);
+                const profile_picture = await (0, lib_1.symDecryptBuffer)(this.auth.symKey, data);
                 return profile_picture;
             }
             catch (e) {
@@ -24,11 +24,11 @@ class AccountController {
             let first_name;
             let last_name;
             if (data.first_name != null) {
-                const first_name_bytes = await (0, betro_js_lib_1.symDecryptBuffer)(this.auth.symKey, data.first_name);
+                const first_name_bytes = await (0, lib_1.symDecryptBuffer)(this.auth.symKey, data.first_name);
                 first_name = first_name_bytes === null || first_name_bytes === void 0 ? void 0 : first_name_bytes.toString("utf-8");
             }
             if (data.last_name != null) {
-                const last_name_bytes = await (0, betro_js_lib_1.symDecryptBuffer)(this.auth.symKey, data.last_name);
+                const last_name_bytes = await (0, lib_1.symDecryptBuffer)(this.auth.symKey, data.last_name);
                 last_name = last_name_bytes === null || last_name_bytes === void 0 ? void 0 : last_name_bytes.toString("utf-8");
             }
             return {
@@ -66,11 +66,11 @@ class AccountController {
                 const encrypted_last_name = data.last_name;
                 const encrypted_profile_picture = data.profile_picture;
                 const encrypted_sym_key = data.sym_key;
-                const symDecrypted = await (0, betro_js_lib_1.symDecrypt)(this.auth.encryptionKey, encrypted_sym_key);
+                const symDecrypted = await (0, lib_1.symDecrypt)(this.auth.encryptionKey, encrypted_sym_key);
                 if (symDecrypted != null) {
-                    const first_name = await (0, betro_js_lib_1.symDecryptBuffer)(symDecrypted, encrypted_first_name);
-                    const last_name = await (0, betro_js_lib_1.symDecryptBuffer)(symDecrypted, encrypted_last_name);
-                    const profile_picture = await (0, betro_js_lib_1.symDecryptBuffer)(symDecrypted, encrypted_profile_picture);
+                    const first_name = await (0, lib_1.symDecryptBuffer)(symDecrypted, encrypted_first_name);
+                    const last_name = await (0, lib_1.symDecryptBuffer)(symDecrypted, encrypted_last_name);
+                    const profile_picture = await (0, lib_1.symDecryptBuffer)(symDecrypted, encrypted_profile_picture);
                     if (first_name == null ||
                         last_name == null ||
                         profile_picture == null) {
@@ -91,16 +91,16 @@ class AccountController {
         };
         this.createProfile = async (first_name, last_name, profile_picture) => {
             try {
-                const encrypted_sym_key = await (0, betro_js_lib_1.symEncrypt)(this.auth.encryptionKey, this.auth.symKey);
-                const encrypted_first_name = await (0, betro_js_lib_1.symEncrypt)(this.auth.symKey.toString("base64"), Buffer.from(first_name));
-                const encrypted_last_name = await (0, betro_js_lib_1.symEncrypt)(this.auth.symKey.toString("base64"), Buffer.from(last_name));
+                const encrypted_sym_key = await (0, lib_1.symEncrypt)(this.auth.encryptionKey, this.auth.symKey);
+                const encrypted_first_name = await (0, lib_1.symEncrypt)(this.auth.symKey.toString("base64"), Buffer.from(first_name));
+                const encrypted_last_name = await (0, lib_1.symEncrypt)(this.auth.symKey.toString("base64"), Buffer.from(last_name));
                 const request = {
                     sym_key: encrypted_sym_key,
                     first_name: encrypted_first_name,
                     last_name: encrypted_last_name,
                 };
                 if (profile_picture != null) {
-                    const encrypted_profile_picture = await (0, betro_js_lib_1.symEncrypt)(this.auth.symKey.toString("base64"), profile_picture);
+                    const encrypted_profile_picture = await (0, lib_1.symEncrypt)(this.auth.symKey.toString("base64"), profile_picture);
                     request.profile_picture = encrypted_profile_picture;
                 }
                 const response = await this.auth.instance.post("/api/account/profile", request);
@@ -115,13 +115,13 @@ class AccountController {
             try {
                 const request = {};
                 if (first_name != null) {
-                    request.first_name = await (0, betro_js_lib_1.symEncrypt)(this.auth.symKey.toString("base64"), Buffer.from(first_name));
+                    request.first_name = await (0, lib_1.symEncrypt)(this.auth.symKey.toString("base64"), Buffer.from(first_name));
                 }
                 if (last_name != null) {
-                    request.last_name = await (0, betro_js_lib_1.symEncrypt)(this.auth.symKey.toString("base64"), Buffer.from(last_name));
+                    request.last_name = await (0, lib_1.symEncrypt)(this.auth.symKey.toString("base64"), Buffer.from(last_name));
                 }
                 if (profile_picture != null) {
-                    request.profile_picture = await (0, betro_js_lib_1.symEncrypt)(this.auth.symKey.toString("base64"), profile_picture);
+                    request.profile_picture = await (0, lib_1.symEncrypt)(this.auth.symKey.toString("base64"), profile_picture);
                 }
                 const response = await this.auth.instance.put("/api/account/profile", request);
                 const data = response.data;

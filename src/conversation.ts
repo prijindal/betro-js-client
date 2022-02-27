@@ -1,5 +1,5 @@
 import { AxiosResponse } from "axios";
-import { deriveExchangeSymKey, symDecrypt, symEncrypt } from "betro-js-lib";
+import { deriveExchangeSymKey, symDecrypt, symEncrypt } from "@betro/lib";
 import { PaginatedResponse, MessageResponse } from "./types";
 import { ConversationResponseBackend } from "./UserResponses";
 import AuthController from "./auth";

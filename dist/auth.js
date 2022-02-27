@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const axios_1 = __importDefault(require("axios"));
-const betro_js_lib_1 = require("betro-js-lib");
+const lib_1 = require("@betro/lib");
 class AuthController {
     constructor(host) {
         this.encryptionKey = "";
@@ -52,13 +52,13 @@ class AuthController {
             this.symKey = null;
         };
         this.login = async (email, password, set_cookie = false) => {
-            const masterKey = await (0, betro_js_lib_1.getMasterKey)(email, password);
-            const masterHash = await (0, betro_js_lib_1.getMasterHash)(masterKey, password);
+            const masterKey = await (0, lib_1.getMasterKey)(email, password);
+            const masterHash = await (0, lib_1.getMasterHash)(masterKey, password);
             const response = await this.instance.post(`/api/login?set_cookie=${set_cookie}`, {
                 email,
                 master_hash: masterHash,
             });
-            this.encryptionKey = await (0, betro_js_lib_1.getEncryptionKey)(masterKey);
+            this.encryptionKey = await (0, lib_1.getEncryptionKey)(masterKey);
             const token = response.data.token;
             if (token != null) {
                 this.token = token;
@@ -85,11 +85,11 @@ class AuthController {
             }
         };
         this.register = async (username, email, password) => {
-            const masterKey = await (0, betro_js_lib_1.getMasterKey)(email, password);
-            const masterHash = await (0, betro_js_lib_1.getMasterHash)(masterKey, password);
-            const encryptionKey = await (0, betro_js_lib_1.getEncryptionKey)(masterKey);
-            const symKey = await (0, betro_js_lib_1.generateSymKey)();
-            const encryptedSymKey = await (0, betro_js_lib_1.symEncrypt)(encryptionKey, Buffer.from(symKey, "base64"));
+            const masterKey = await (0, lib_1.getMasterKey)(email, password);
+            const masterHash = await (0, lib_1.getMasterHash)(masterKey, password);
+            const encryptionKey = await (0, lib_1.getEncryptionKey)(masterKey);
+            const symKey = await (0, lib_1.generateSymKey)();
+            const encryptedSymKey = await (0, lib_1.symEncrypt)(encryptionKey, Buffer.from(symKey, "base64"));
             const response = await this.instance.post("/api/register", {
                 username,
                 email,

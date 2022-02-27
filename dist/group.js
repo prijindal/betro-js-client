@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const betro_js_lib_1 = require("betro-js-lib");
+const lib_1 = require("@betro/lib");
 class GroupController {
     constructor(auth) {
         this.fetchGroups = async () => {
@@ -24,8 +24,8 @@ class GroupController {
             }
         };
         this.createGroup = async (name, is_default) => {
-            const sym_key = await (0, betro_js_lib_1.generateSymKey)();
-            const encryptedSymKey = await (0, betro_js_lib_1.symEncrypt)(this.auth.encryptionKey, Buffer.from(sym_key, "base64"));
+            const sym_key = await (0, lib_1.generateSymKey)();
+            const encryptedSymKey = await (0, lib_1.symEncrypt)(this.auth.encryptionKey, Buffer.from(sym_key, "base64"));
             try {
                 const response = await this.auth.instance.post("/api/groups", {
                     name: name,

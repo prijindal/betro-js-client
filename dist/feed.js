@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const betro_js_lib_1 = require("betro-js-lib");
+const lib_1 = require("@betro/lib");
 const profileHelper_1 = require("./profileHelper");
 class FeedController {
     constructor(auth) {
@@ -31,12 +31,12 @@ class FeedController {
             if (user.own_private_key == null || user.public_key == null) {
                 throw Error("Decryption issues");
             }
-            const privateKey = await (0, betro_js_lib_1.symDecrypt)(this.auth.encryptionKey, user.own_private_key);
+            const privateKey = await (0, lib_1.symDecrypt)(this.auth.encryptionKey, user.own_private_key);
             if (privateKey == null) {
                 throw Error("Decryption issues");
             }
-            const derivedKey = await (0, betro_js_lib_1.deriveExchangeSymKey)(user.public_key, privateKey.toString("base64"));
-            const symKey = await (0, betro_js_lib_1.symDecrypt)(derivedKey, keys[post.key_id]);
+            const derivedKey = await (0, lib_1.deriveExchangeSymKey)(user.public_key, privateKey.toString("base64"));
+            const symKey = await (0, lib_1.symDecrypt)(derivedKey, keys[post.key_id]);
             if (symKey == null) {
                 throw Error("Decryption issues");
             }
@@ -70,7 +70,7 @@ class FeedController {
                 const response = await this.auth.instance.get(`/api/account/posts?limit=${limit}&after=${after}`);
                 const posts = response.data;
                 const data = await this.transformPostFeed(posts, async (post, keys) => {
-                    const symKey = await (0, betro_js_lib_1.symDecrypt)(this.auth.encryptionKey, keys[post.key_id]);
+                    const symKey = await (0, lib_1.symDecrypt)(this.auth.encryptionKey, keys[post.key_id]);
                     if (symKey != null) {
                         return symKey;
                     }
