@@ -1,5 +1,5 @@
 import { includes } from "lodash";
-import faker from "faker";
+import casual from "casual";
 import BetroApi, { GroupResponse } from "../src";
 
 export interface GeneratedUser {
@@ -24,33 +24,33 @@ export const generateUsers = async (
 ): Promise<Array<GeneratedUser>> => {
   const users: Array<GeneratedUser> = [];
   for (let index = 0; index < n; index++) {
-    let email = faker.internet.email();
+    let email = casual.email;
     while (
       includes(
         users.map((a) => a.credentials.email),
         email
       )
     ) {
-      email = faker.internet.email();
+      email = casual.email;
     }
-    let username = faker.internet.userName();
+    let username = casual.username;
     while (
       includes(
         users.map((a) => a.credentials.username),
         username
       )
     ) {
-      username = faker.internet.userName();
+      username = casual.username;
     }
-    const password = faker.internet.password();
+    const password = casual.password;
     users.push({
       credentials: {
         username: username,
         email: email,
       },
       profile: {
-        first_name: faker.name.firstName(),
-        last_name: faker.name.lastName(),
+        first_name: casual.first_name,
+        last_name: casual.last_name,
         profile_picture: Buffer.from("wxwx"),
       },
       password,
