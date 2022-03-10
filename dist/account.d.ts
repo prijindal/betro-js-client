@@ -1,3 +1,4 @@
+/// <reference types="node" />
 import AuthController from "./auth";
 import { CountResponse, UserProfileResponse, WhoAmiResponse } from "./types";
 declare class AccountController {

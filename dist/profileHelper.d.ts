@@ -1,3 +1,4 @@
+/// <reference types="node" />
 import { PostResponse } from "./types";
 import { ProfileGrantRow } from "./UserResponses";
 export interface UserProfile {
